@@ -27,164 +27,104 @@
         // Quiz Data
         const quizData = [
             {
-                "question": "Given a series RC circuit with $R = 3.5 \\text{ k}\\Omega$ and $C = 0.1 \\mu\\text{F}$, what is the approximate capacitive reactance ($X_C$) if the supply frequency is set to $200 \\text{ Hz}$?",
+                "question": "According to the introduction of the lab manual, what is the primary function of a resistor in an AC circuit compared to inductors and capacitors?",
                 "answerOptions": [
-                { "text": "$7.96 \\text{ k}\\Omega$", "rationale": "Applying the formula $X_C = \\frac{1}{2\\pi fC}$, using $200 \\text{ Hz}$ and $0.1 \\times 10^{-6} \\text{ F}$ yields approximately $7957 \\text{ }\\Omega$.", "isCorrect": true },
-                { "text": "$79.6 \\text{ k}\\Omega$", "rationale": "This value suggests an error in converting microfarads to farads during the calculation.", "isCorrect": false },
-                { "text": "$1.25 \\text{ k}\\Omega$", "rationale": "This result likely comes from multiplying the frequency and capacitance without including the $2\\pi$ and inverse relationship.", "isCorrect": false },
-                { "text": "$3.50 \\text{ k}\\Omega$", "rationale": "This is the value of the resistor, not the calculated reactance of the capacitor.", "isCorrect": false }
+                { "text": "It stores electrical charge in an electric field.", "rationale": "This describes the fundamental property of a capacitor, not a resistor.", "isCorrect": false },
+                { "text": "It opposes any change in the flow of electrical current.", "rationale": "This describes the behavior of an inductor (Lenz's law).", "isCorrect": false },
+                { "text": "It dissipates heat by converting electrical energy.", "rationale": "Resistors simply convert electrical energy into heat and do not vary their response based on the AC frequency.", "isCorrect": true },
+                { "text": "It generates a magnetic field proportional to the current magnitude.", "rationale": "This is the primary physical characteristic of an inductor.", "isCorrect": false }
                 ],
-                "hint": "Ensure you convert microfarads to farads before plugging the values into the $X_C$ denominator."
+                "hint": "Think about what happens to the energy when current flows through a purely resistive element."
             },
             {
-                "question": "In the series RL lab experiment, if you measure a voltage of $2.5 \\text{ V}$ rms across the $3.5 \\text{ k}\\Omega$ resistor, what is the rms source current ($I_S$) flowing through the entire circuit?",
+                "question": "In a series circuit containing linear components, what is the phase relationship between the current and voltage across an ideal capacitor?",
                 "answerOptions": [
-                { "text": "$0.71 \\text{ mA}$", "rationale": "By Ohm's law, the current through the resistor is $I = \\frac{V_R}{R}$ ($2.5 / 3500$), which dictates the total current for the series circuit.", "isCorrect": true },
-                { "text": "$1.41 \\text{ mA}$", "rationale": "This value might be incorrectly derived by applying peak-to-peak conversions to an already rms-measured value.", "isCorrect": false },
-                { "text": "$8.75 \\text{ mA}$", "rationale": "This results from multiplying voltage and resistance rather than dividing them.", "isCorrect": false },
-                { "text": "$2.50 \\text{ mA}$", "rationale": "This assumes the current magnitude is a direct 1:1 mapping to the measured voltage drop, ignoring the $3.5 \\text{ k}\\Omega$ resistance.", "isCorrect": false }
+                { "text": "The voltage leads the current by $90^{\\circ}$.", "rationale": "This describes an inductor, not a capacitor.", "isCorrect": false },
+                { "text": "The current leads the voltage by $90^{\\circ}$.", "rationale": "In a capacitor, current must flow first to build up the charge that creates the voltage, resulting in a $90^{\\circ}$ phase lead for the current.", "isCorrect": true },
+                { "text": "They are exactly in phase.", "rationale": "Voltage and current are only in phase across an ideal resistor.", "isCorrect": false },
+                { "text": "The current lags the voltage by $180^{\\circ}$.", "rationale": "A $180^{\\circ}$ phase shift means they are completely inverted, which does not represent the quadrature relationship of a capacitor.", "isCorrect": false }
                 ],
-                "hint": "Remember that Kirchhoff's current law dictates that current is the same throughout a series circuit."
+                "hint": "Remember the acronym 'ELI the ICE man', where 'I' is current and 'E' is voltage."
             },
             {
-                "question": "Calculate the expected resonant frequency ($f_o$) for the series RLC circuit in the lab if $L = 100 \\text{ mH}$, $C = 0.01 \\mu\\text{F}$, and $R = 10 \\text{ k}\\Omega$.",
+                "question": "How does the lab manual define a 'phasor' in the context of AC circuit analysis?",
                 "answerOptions": [
-                { "text": "$5.03 \\text{ kHz}$", "rationale": "Using $f_o = \\frac{1}{2\\pi\\sqrt{LC}}$, substituting $100 \\times 10^{-3} \\text{ H}$ and $0.01 \\times 10^{-6} \\text{ F}$ yields approximately $5032 \\text{ Hz}$.", "isCorrect": true },
-                { "text": "$1.59 \\text{ kHz}$", "rationale": "This calculation likely omitted the square root over the LC product.", "isCorrect": false },
-                { "text": "$15.9 \\text{ kHz}$", "rationale": "This value often results from mishandling the standard units (milli and micro) during the calculation.", "isCorrect": false },
-                { "text": "$50.3 \\text{ kHz}$", "rationale": "This suggests a decimal placement error when processing the scientific notation of the inductor and capacitor values.", "isCorrect": false }
+                { "text": "A physical instrument used to measure the phase difference between two waveforms.", "rationale": "A phasor is a mathematical concept, not a physical piece of laboratory equipment.", "isCorrect": false },
+                { "text": "The ratio of true power to apparent power in an RLC circuit.", "rationale": "This is the definition of the Power Factor, not a phasor.", "isCorrect": false },
+                { "text": "A specific frequency at which inductive and capacitive reactances cancel out.", "rationale": "This defines the resonant frequency ($f_o$), not a phasor.", "isCorrect": false },
+                { "text": "A complex number used to represent a sinusoidal wave, taking into account both amplitude and phase angle.", "rationale": "Phasors allow AC sine waves to be represented as two-dimensional vectors with real and imaginary components to simplify circuit analysis.", "isCorrect": true }
                 ],
-                "hint": "The resistance value is a distractor; focus only on the energy-storing components for this specific calculation."
+                "hint": "Think about how we represent rotating AC waveforms mathematically on an XY axis."
             },
             {
-                "question": "During the RL circuit experiment, you increase the sine wave generator frequency from $1 \\text{ kHz}$ to $5 \\text{ kHz}$. Assuming the source voltage amplitude remains constant, what practical change will you observe regarding the voltage across the inductor ($V_L$)?",
+                "question": "As the frequency of the applied sine wave increases, what happens theoretically to the inductive reactance ($X_L$) and capacitive reactance ($X_C$)?",
                 "answerOptions": [
-                { "text": "The amplitude of $V_L$ will increase.", "rationale": "Because $X_L = 2\\pi fL$, increasing frequency increases the inductor's reactance, meaning it will claim a proportionally larger share of the total source voltage.", "isCorrect": true },
-                { "text": "The amplitude of $V_L$ will decrease.", "rationale": "This would happen in an RC circuit where reactance is inversely proportional to frequency, not an RL circuit.", "isCorrect": false },
-                { "text": "The amplitude of $V_L$ will remain exactly the same.", "rationale": "This incorrectly assumes that the impedance of the inductor acts like a constant resistor regardless of the AC frequency.", "isCorrect": false },
-                { "text": "The phase shift of $V_L$ relative to the current will drop to zero.", "rationale": "The voltage across an ideal inductor will always maintain its $90^{\\circ}$ phase lead over the current, regardless of the operating frequency.", "isCorrect": false }
+                { "text": "Both $X_L$ and $X_C$ increase.", "rationale": "This is incorrect because one reactance has a direct relationship with frequency, while the other has an inverse relationship.", "isCorrect": false },
+                { "text": "$X_L$ increases, while $X_C$ decreases.", "rationale": "Because $X_L = 2\\pi fL$ (direct) and $X_C = 1 / (2\\pi fC)$ (inverse), increasing frequency raises inductive opposition and lowers capacitive opposition.", "isCorrect": true },
+                { "text": "Both $X_L$ and $X_C$ decrease.", "rationale": "This contradicts the formulas for how these components react to high-frequency signals.", "isCorrect": false },
+                { "text": "$X_L$ decreases, while $X_C$ increases.", "rationale": "This has the relationships backward. Inductors block high frequencies, while capacitors pass them easily.", "isCorrect": false }
                 ],
-                "hint": "Consider how the equation for inductive reactance behaves as the input frequency scales up."
+                "hint": "Look at the location of the frequency variable ($f$) in the mathematical formulas for $X_L$ and $X_C$."
             },
             {
-                "question": "You are instructed to measure the phase angle between the source voltage ($V_S$) and the total current in an RC circuit using a dual-channel oscilloscope. How is this practically achieved since the oscilloscope only measures voltage?",
+                "question": "Why does the lab procedure instruct you to measure the voltage across the resistor ($V_R$) to determine the phase of the total circuit current?",
                 "answerOptions": [
-                { "text": "By measuring the phase difference between $V_S$ on Channel 1 and the resistor voltage ($V_R$) on Channel 2.", "rationale": "Because the voltage across a resistor is perfectly in phase with the current flowing through it, $V_R$ serves as an accurate proxy for the circuit current's phase.", "isCorrect": true },
-                { "text": "By measuring the phase difference between $V_S$ on Channel 1 and the capacitor voltage ($V_C$) on Channel 2.", "rationale": "The capacitor voltage is shifted $90^{\\circ}$ from the current, meaning this comparison would yield an incorrect phase angle.", "isCorrect": false },
-                { "text": "By integrating the voltage waveform of the capacitor using the oscilloscope's math function.", "rationale": "While mathematically related, this is overcomplicating the procedure when a direct proxy is readily available in the circuit.", "isCorrect": false },
-                { "text": "By connecting the oscilloscope probes directly in series with the circuit components.", "rationale": "Oscilloscopes are designed to measure parallel voltage drops; connecting them in series will alter the circuit and fail to display the required waves.", "isCorrect": false }
+                { "text": "Because the oscilloscope cannot physically connect to capacitors or inductors safely.", "rationale": "The oscilloscope can safely connect to any of these low-voltage lab components; safety is not the reason for this specific measurement choice.", "isCorrect": false },
+                { "text": "Because $V_R$ is always equal to the total supply voltage ($V_S$) in an AC circuit.", "rationale": "In a series RLC circuit, the supply voltage is the vector sum of all component voltages, so $V_R$ rarely equals $V_S$ unless the circuit is at resonance.", "isCorrect": false },
+                { "text": "Because the current and voltage are always perfectly in phase across an ideal resistor.", "rationale": "Since current is the same everywhere in a series circuit, and a resistor causes no phase shift, the shape and phase of $V_R$ perfectly mimics the total current.", "isCorrect": true },
+                { "text": "Because the resistor is the only component that does not drop any voltage.", "rationale": "Resistors always drop voltage when current flows through them according to Ohm's Law.", "isCorrect": false }
                 ],
-                "hint": "Look for the component in the series circuit that does not alter the phase of its localized voltage relative to the current."
+                "hint": "Consider the unique property of an ideal resistor regarding phase shift compared to inductors and capacitors."
             },
             {
-                "question": "In the series RC circuit ($R = 3.5 \\text{ k}\\Omega$, $C = 0.1 \\mu\\text{F}$), as the frequency increases from $200 \\text{ Hz}$ to $1 \\text{ kHz}$, what happens to the total impedance ($Z_{total}$) of the circuit?",
+                "question": "Calculate the theoretical resonant frequency ($f_o$) of a series RLC circuit with $L = 50 \\text{ mH}$ and $C = 20 \\mu\\text{F}$.",
                 "answerOptions": [
-                { "text": "Its magnitude decreases, and its phase angle moves closer to zero degrees.", "rationale": "Higher frequency reduces $X_C$, which lowers the total impedance magnitude and makes the circuit behave more resistively (phase angle moving toward zero).", "isCorrect": true },
-                { "text": "Its magnitude increases, and its phase angle moves closer to $-90$ degrees.", "rationale": "This would happen if the frequency was decreased, making the capacitive reactance dominate the circuit.", "isCorrect": false },
-                { "text": "Its magnitude decreases, but its phase angle remains constant.", "rationale": "The phase angle is defined by the ratio of reactance to resistance; if reactance changes, the phase angle must also change.", "isCorrect": false },
-                { "text": "Its magnitude remains constant at $3.5 \\text{ k}\\Omega$, but the phase angle changes.", "rationale": "The total impedance is a vector sum of both resistance and reactance, so it cannot remain static while reactance fluctuates.", "isCorrect": false }
+                { "text": "$159.15 \\text{ Hz}$", "rationale": "Using $f_o = \\frac{1}{2\\pi\\sqrt{LC}}$, we get $\\frac{1}{2\\pi\\sqrt{0.05 \\times 0.00002}} = \\frac{1}{2\\pi\\sqrt{10^{-6}}} = \\frac{1}{2\\pi \\times 0.001} \\approx 159.15 \\text{ Hz}$.", "isCorrect": true },
+                { "text": "$1000.0 \\text{ Hz}$", "rationale": "This value ignores the $2\\pi$ in the denominator of the resonant frequency formula.", "isCorrect": false },
+                { "text": "$318.3 \\text{ Hz}$", "rationale": "This is the result of missing a factor of 2 in the calculation, often from misplacing the square root or miscalculating the $2\\pi$ term.", "isCorrect": false },
+                { "text": "$50.3 \\text{ Hz}$", "rationale": "This is a distractor value utilizing common numbers from other standard lab experiments.", "isCorrect": false }
                 ],
-                "hint": "Evaluate what happens to the size of the $X_C$ vector and how that affects the hypotenuse of the impedance triangle."
+                "hint": "Use the formula $f_o = \\frac{1}{2\\pi\\sqrt{LC}}$ and be very careful with the milli ($10^{-3}$) and micro ($10^{-6}$) conversions."
             },
             {
-                "question": "When finding the resonant frequency practically in the lab, you monitor the voltage across the resistor ($V_R$) while tuning the frequency. What specific behavior indicates that the circuit has reached resonance?",
+                "question": "A series RL circuit has a resistor of $1.5 \\text{ k}\\Omega$ and an inductive reactance ($X_L$) of $2.0 \\text{ k}\\Omega$ at a specific frequency. What is the total magnitude of the impedance ($Z$)?",
                 "answerOptions": [
-                { "text": "The resistor voltage reaches its maximum possible amplitude.", "rationale": "At resonance, the opposing reactances cancel out, minimizing total impedance to just the resistance and thereby maximizing current and $V_R$.", "isCorrect": true },
-                { "text": "The resistor voltage drops to exactly zero.", "rationale": "This would indicate an open circuit, not resonance. At resonance, current is at its peak.", "isCorrect": false },
-                { "text": "The resistor voltage becomes exactly $90^{\\circ}$ out of phase with the supply voltage.", "rationale": "At resonance, the circuit is purely resistive, meaning the phase angle between supply voltage and resistor voltage is zero.", "isCorrect": false },
-                { "text": "The resistor voltage matches the source voltage minus the inductor voltage.", "rationale": "Because phasors require vector addition, simple subtraction does not account for the $180^{\\circ}$ phase difference between the inductor and capacitor.", "isCorrect": false }
+                { "text": "$3.5 \\text{ k}\\Omega$", "rationale": "This is the incorrect algebraic sum. Reactance and resistance are $90^{\\circ}$ out of phase and must be added as vectors.", "isCorrect": false },
+                { "text": "$0.5 \\text{ k}\\Omega$", "rationale": "This is the incorrect algebraic difference between the two values.", "isCorrect": false },
+                { "text": "$4.5 \\text{ k}\\Omega$", "rationale": "This is an arbitrary distractor value.", "isCorrect": false },
+                { "text": "$2.5 \\text{ k}\\Omega$", "rationale": "Using the Pythagorean theorem for impedance vectors: $Z = \\sqrt{R^2 + X_L^2} = \\sqrt{1.5^2 + 2.0^2} = \\sqrt{2.25 + 4} = \\sqrt{6.25} = 2.5 \\text{ k}\\Omega$.", "isCorrect": true }
                 ],
-                "hint": "Think about what happens to the total impedance when the inductive and capacitive effects completely neutralize each other."
+                "hint": "Remember that resistance and reactance form the legs of a right-angled triangle on a phasor diagram."
             },
             {
-                "question": "If your oscilloscope shows that the resistor voltage ($V_R$) waveform is peaking slightly *after* the source voltage ($V_S$) waveform in time, what does this tell you about the circuit?",
+                "question": "According to the lab manual and setup, what specific hardware is used to easily adjust and supply the required values of resistance, capacitance, and inductance for the circuits?",
                 "answerOptions": [
-                { "text": "The circuit is acting inductively, and current is lagging the source voltage.", "rationale": "Since $V_R$ mirrors the current's phase, a delayed peak means current lags voltage, which is the defining characteristic of an inductive circuit.", "isCorrect": true },
-                { "text": "The circuit is acting capacitively, and current is leading the source voltage.", "rationale": "If the circuit were capacitive, the current (and thus $V_R$) would peak before the source voltage.", "isCorrect": false },
-                { "text": "The circuit is purely resistive.", "rationale": "In a purely resistive circuit, the $V_R$ and $V_S$ waveforms would peak at exactly the same time.", "isCorrect": false },
-                { "text": "The circuit is currently tuned to its exact resonant frequency.", "rationale": "At resonance, the phase difference is zero, so neither waveform would lead or lag the other.", "isCorrect": false }
+                { "text": "Function generators", "rationale": "The function generator provides the AC voltage signal, not the physical R, L, or C component values.", "isCorrect": false },
+                { "text": "Decade boxes", "rationale": "Decade boxes contain internal arrays of components connected to rotary switches, allowing users to dial in exact R, L, or C values quickly.", "isCorrect": true },
+                { "text": "Digital multimeters", "rationale": "Multimeters measure electrical properties; they do not supply or act as the components in the circuit.", "isCorrect": false },
+                { "text": "Oscilloscope probes", "rationale": "Probes are used strictly for measuring and observing the voltage waveforms.", "isCorrect": false }
                 ],
-                "hint": "Use the relationship between the resistor voltage and the circuit's total current to determine the overall phase shift."
+                "hint": "These devices usually have multiple rotary dials labeled with multipliers like $10^0$, $10^1$, and $10^2$."
             },
             {
-                "question": "When setting up the oscilloscope to measure $V_S$ on Channel 1 and a component voltage on Channel 2, what critical safety/measurement precaution must be taken regarding the probe ground clips?",
+                "question": "If you measure a phase angle of $-45^{\\circ}$ in a series RLC circuit, what does this tell you about the relationship between the components at that specific frequency?",
                 "answerOptions": [
-                { "text": "Both ground clips must be connected to the exact same physical node in the circuit (the common ground).", "rationale": "Because the ground leads on an oscilloscope are internally connected to earth ground, placing them at different nodes will create a short circuit across the components in between.", "isCorrect": true },
-                { "text": "The ground clip for Channel 2 should be connected to the positive terminal of the measured component.", "rationale": "This would invert the measurement and potentially short the circuit depending on Channel 1's ground placement.", "isCorrect": false },
-                { "text": "The ground clips should be left completely disconnected to prevent ground loops.", "rationale": "Without a ground reference, the oscilloscope cannot take accurate voltage readings.", "isCorrect": false },
-                { "text": "One ground clip should go to the resistor, and the other to the capacitor.", "rationale": "This practice will short out whatever components lie between the two different connection points.", "isCorrect": false }
+                { "text": "The inductive reactance is exactly equal to the resistance.", "rationale": "If inductive reactance equaled resistance, the phase angle would be $+45^{\\circ}$, not negative.", "isCorrect": false },
+                { "text": "The circuit is at perfect resonance.", "rationale": "At perfect resonance, the phase angle is exactly $0^{\\circ}$.", "isCorrect": false },
+                { "text": "The capacitive reactance is greater than the inductive reactance.", "rationale": "A negative phase angle means the current is leading the voltage, which is the defining characteristic of a circuit where capacitive reactance dominates.", "isCorrect": true },
+                { "text": "The total impedance is purely resistive.", "rationale": "If it were purely resistive, there would be no phase shift ($0^{\\circ}$).", "isCorrect": false }
                 ],
-                "hint": "Consider the internal wiring of standard oscilloscopes and how their reference leads relate to the power outlet's earth pin."
+                "hint": "A negative phase angle means the circuit is acting 'capacitively' (ELI the ICE man)."
             },
             {
-                "question": "For the series RL circuit operating at $1 \\text{ kHz}$ with $R = 3.5 \\text{ k}\\Omega$ and $L = 100 \\text{ mH}$ ($X_L \\approx 628 \\text{ }\\Omega$), which of the following best estimates the magnitude of the total impedance ($Z_{total}$)?",
+                "question": "In a series RC circuit, the supply voltage is $10 \\text{ V}$ rms, and the voltage across the resistor is measured at $6 \\text{ V}$ rms. What is the expected voltage across the capacitor ($V_C$)?",
                 "answerOptions": [
-                { "text": "$3.56 \\text{ k}\\Omega$", "rationale": "Using vector addition $Z = \\sqrt{R^2 + X_L^2}$, computing $\\sqrt{3500^2 + 628^2}$ yields roughly $3556 \\text{ }\\Omega$.", "isCorrect": true },
-                { "text": "$4.13 \\text{ k}\\Omega$", "rationale": "This incorrect value is achieved by simply adding the resistance and reactance algebraically ($3.5 + 0.628$).", "isCorrect": false },
-                { "text": "$2.87 \\text{ k}\\Omega$", "rationale": "This incorrect value comes from algebraically subtracting the reactance from the resistance.", "isCorrect": false },
-                { "text": "$6.28 \\text{ k}\\Omega$", "rationale": "This is a miscalculation that represents the inductive reactance off by a factor of 10.", "isCorrect": false }
+                { "text": "$4 \\text{ V}$ rms", "rationale": "This incorrectly assumes simple algebraic subtraction ($10 - 6 = 4$), which ignores the vector nature of AC voltages.", "isCorrect": false },
+                { "text": "$16 \\text{ V}$ rms", "rationale": "This is the incorrect algebraic sum, completely ignoring Kirchhoff's laws for AC circuits.", "isCorrect": false },
+                { "text": "$8 \\text{ V}$ rms", "rationale": "Because the voltages form a right triangle ($V_S^2 = V_R^2 + V_C^2$), we calculate $V_C = \\sqrt{10^2 - 6^2} = \\sqrt{100 - 36} = \\sqrt{64} = 8 \\text{ V}$ rms.", "isCorrect": true },
+                { "text": "$11.6 \\text{ V}$ rms", "rationale": "This incorrect calculation attempts to add the squares of the supply and resistor voltages instead of subtracting them.", "isCorrect": false }
                 ],
-                "hint": "Remember that resistance and reactance must be added geometrically as perpendicular vectors, not algebraically."
-            },
-            {
-                "question": "To accurately measure the phase angle between $V_S$ and $V_R$ on the oscilloscope, the lab manual specifies adjusting the trigger settings. Which setup is recommended to get stable, easily comparable waveforms?",
-                "answerOptions": [
-                { "text": "Set the trigger mode to Edge trigger on Channel 1 and use auto scale to make waveforms the same height.", "rationale": "Edge triggering on the stable source (Channel 1) locks the horizontal position, while auto-scaling the vertical heights allows for easy visual comparison of the horizontal phase shift.", "isCorrect": true },
-                { "text": "Set the trigger mode to alternating and scale the waveforms so the peaks touch the top of the screen.", "rationale": "Alternating triggers can cause the waveforms to walk independently, destroying the phase relationship on the display.", "isCorrect": false },
-                { "text": "Use the math function to subtract Channel 2 from Channel 1 and trigger on the difference.", "rationale": "This would display a single new resultant wave, making it impossible to directly compare the phase between the two original waves.", "isCorrect": false },
-                { "text": "Disable triggering entirely to allow the waveforms to free-run for continuous phase monitoring.", "rationale": "Free-running waveforms scroll continuously across the screen, making it practically impossible to measure a stable phase angle.", "isCorrect": false }
-                ],
-                "hint": "Look for the method that locks the display to a single, stable source and normalizes the visual sizes for measurement."
-            },
-            {
-                "question": "During the RC circuit procedure, you measure $V_C$ with Channel 2, and then the manual instructs you to 'Interchange R and C' before measuring $V_R$. Why is this physical swap necessary?",
-                "answerOptions": [
-                { "text": "To ensure the component being measured by Channel 2 shares a common ground with the source on Channel 1.", "rationale": "Standard oscilloscope probes share a common earth ground; swapping the components places the resistor at the circuit's ground node, preventing the probe's ground clip from shorting out the capacitor.", "isCorrect": true },
-                { "text": "To prevent the capacitor from discharging directly into the oscilloscope circuitry.", "rationale": "Oscilloscope inputs have very high impedance ($1 \\text{ M}\\Omega$ or more) and do not draw enough current to rapidly discharge the capacitor.", "isCorrect": false },
-                { "text": "To intentionally reverse the phase angle of the entire circuit to a positive value.", "rationale": "In a series circuit, swapping the physical order of components does not change the total impedance or the overall phase angle of the circuit.", "isCorrect": false },
-                { "text": "To match the internal resistance of the oscilloscope probes with the component.", "rationale": "Probe resistance is fixed and swapping components does not 'match' resistance; it solves a topology constraint regarding the shared ground.", "isCorrect": false }
-                ],
-                "hint": "Consider the fact that oscilloscope ground clips are internally connected together inside the machine."
-            },
-            {
-                "question": "The manual instructs you to set the supply voltage ($V_S$) to $4 \\text{ V}$ peak-to-peak. When you record the rms source voltage in your observation table, what value should you theoretically expect to calculate and write down?",
-                "answerOptions": [
-                { "text": "$1.41 \\text{ V}$", "rationale": "RMS voltage is calculated by taking the peak voltage ($4 / 2 = 2 \\text{ V}$) and dividing it by $\\sqrt{2}$ (or multiplying by $0.707$).", "isCorrect": true },
-                { "text": "$2.83 \\text{ V}$", "rationale": "This incorrect value is achieved by multiplying the full peak-to-peak voltage ($4 \\text{ V}$) by $0.707$ instead of using the peak voltage.", "isCorrect": false },
-                { "text": "$2.00 \\text{ V}$", "rationale": "This is the peak voltage (amplitude), not the rms voltage.", "isCorrect": false },
-                { "text": "$4.00 \\text{ V}$", "rationale": "This is simply copying the peak-to-peak voltage without performing the rms conversion.", "isCorrect": false }
-                ],
-                "hint": "Remember the steps for converting peak-to-peak to RMS: first divide by 2, then multiply by $0.707$."
-            },
-            {
-                "question": "As demonstrated in the lab video, if you need to set the resistor decade box to $3.5 \\text{ k}\\Omega$ ($3500 \\text{ }\\Omega$), which specific dials must be manipulated?",
-                "answerOptions": [
-                { "text": "Set the dial labeled $10^3$ to '3', and the dial labeled $10^2$ to '5'.", "rationale": "Decade boxes use integer dials multiplied by the indicated power of ten. $3 \\times 10^3$ ($3000$) plus $5 \\times 10^2$ ($500$) equals $3500 \\text{ }\\Omega$.", "isCorrect": true },
-                { "text": "Set the dial labeled $10^4$ to '3', and the dial labeled $10^3$ to '5'.", "rationale": "This would result in $30,000 + 5,000 = 35,000 \\text{ }\\Omega$ ($35 \\text{ k}\\Omega$).", "isCorrect": false },
-                { "text": "Set the dial labeled $10^1$ to '35'.", "rationale": "Decade box dials only go from 0 to 9 or 10; there is no '35' position on a single dial.", "isCorrect": false },
-                { "text": "Set the dial labeled $10^3$ to '3.5'.", "rationale": "Decade boxes only allow discrete integer selections on each dial; you cannot select decimal values.", "isCorrect": false }
-                ],
-                "hint": "Break $3500 \\text{ }\\Omega$ into thousands and hundreds, and look for the matching multipliers on the box."
-            },
-            {
-                "question": "After interchanging components in the RL circuit, you measure $V_R = 2.0 \\text{ V}$ rms and $V_L = 1.5 \\text{ V}$ rms. Using the voltage phasor diagram principles, what is the approximate phase angle ($\\phi$) of the total impedance?",
-                "answerOptions": [
-                { "text": "$36.9^{\\circ}$", "rationale": "The phase angle can be determined using basic trigonometry on the right triangle formed by the voltage vectors: $\\phi = \\tan^{-1}(V_L / V_R)$, which is $\\tan^{-1}(1.5 / 2.0)$.", "isCorrect": true },
-                { "text": "$53.1^{\\circ}$", "rationale": "This incorrect angle results from inverting the ratio: $\\tan^{-1}(V_R / V_L)$.", "isCorrect": false },
-                { "text": "$41.4^{\\circ}$", "rationale": "This is a distractor value that might be reached by incorrectly substituting the sum or difference of the voltages into a cosine function.", "isCorrect": false },
-                { "text": "$48.6^{\\circ}$", "rationale": "This is a distractor value unrelated to the correct trigonometric calculation for the vector triangle.", "isCorrect": false }
-                ],
-                "hint": "Sketch the phasor diagram with $V_R$ on the x-axis and $V_L$ on the y-axis, then use the inverse tangent function."
-            },
-            {
-                "question": "In the lab video's resonance demonstration, the instructor slowly increases the frequency from $1 \\text{ kHz}$ until a specific visual confirmation is seen on the oscilloscope at roughly $4.6 \\text{ kHz}$. What exactly does the instructor look for to confirm resonance?",
-                "answerOptions": [
-                { "text": "The $V_R$ waveform and the $V_S$ waveform perfectly overlapping with zero phase shift.", "rationale": "At resonance, inductive and capacitive reactances cancel, making the circuit purely resistive. The instructor visually confirms this when the source voltage and resistor voltage (which represents current) are perfectly in phase.", "isCorrect": true },
-                { "text": "The $V_R$ waveform reaching exactly $90^{\\circ}$ out of phase with the supply.", "rationale": "A $90^{\\circ}$ phase shift would indicate a purely inductive or purely capacitive circuit, not resonance.", "isCorrect": false },
-                { "text": "The current waveform collapsing into a flat horizontal line.", "rationale": "At resonance, the current is maximized, not minimized to a flat line.", "isCorrect": false },
-                { "text": "The oscilloscope automatically triggering a 'Resonance' flag on the digital display.", "rationale": "Standard oscilloscopes do not have a specific mathematical flag for circuit resonance; it must be determined by analyzing the phase shift or amplitude peaks manually.", "isCorrect": false }
-                ],
-                "hint": "Recall that in a resonant circuit, the total impedance behaves exactly like a pure resistor."
+                "hint": "Apply the Pythagorean theorem to the voltage phasors, where the supply voltage ($V_S$) is the hypotenuse."
             }
         ];
 
@@ -425,5 +365,3 @@
     </script>
 </body>
 </html>
-
-
