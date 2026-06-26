@@ -1,367 +1,1062 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RLC AC Circuits Interactive Quiz</title>
-    
+    <title>C# Programming Mastery Canvas - High Contrast Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- MathJax Configuration -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-            }
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-</head>
-<body class="bg-gray-50 font-sans">
-    
-    <div id="app"></div>
-
-    <script>
-        // Quiz Data
-        const quizData = [
-            {
-                "question": "According to the introduction of the lab manual, what is the primary function of a resistor in an AC circuit compared to inductors and capacitors?",
-                "answerOptions": [
-                { "text": "It stores electrical charge in an electric field.", "rationale": "This describes the fundamental property of a capacitor, not a resistor.", "isCorrect": false },
-                { "text": "It opposes any change in the flow of electrical current.", "rationale": "This describes the behavior of an inductor (Lenz's law).", "isCorrect": false },
-                { "text": "It dissipates heat by converting electrical energy.", "rationale": "Resistors simply convert electrical energy into heat and do not vary their response based on the AC frequency.", "isCorrect": true },
-                { "text": "It generates a magnetic field proportional to the current magnitude.", "rationale": "This is the primary physical characteristic of an inductor.", "isCorrect": false }
-                ],
-                "hint": "Think about what happens to the energy when current flows through a purely resistive element."
-            },
-            {
-                "question": "In a series circuit containing linear components, what is the phase relationship between the current and voltage across an ideal capacitor?",
-                "answerOptions": [
-                { "text": "The voltage leads the current by $90^{\\circ}$.", "rationale": "This describes an inductor, not a capacitor.", "isCorrect": false },
-                { "text": "The current leads the voltage by $90^{\\circ}$.", "rationale": "In a capacitor, current must flow first to build up the charge that creates the voltage, resulting in a $90^{\\circ}$ phase lead for the current.", "isCorrect": true },
-                { "text": "They are exactly in phase.", "rationale": "Voltage and current are only in phase across an ideal resistor.", "isCorrect": false },
-                { "text": "The current lags the voltage by $180^{\\circ}$.", "rationale": "A $180^{\\circ}$ phase shift means they are completely inverted, which does not represent the quadrature relationship of a capacitor.", "isCorrect": false }
-                ],
-                "hint": "Remember the acronym 'ELI the ICE man', where 'I' is current and 'E' is voltage."
-            },
-            {
-                "question": "How does the lab manual define a 'phasor' in the context of AC circuit analysis?",
-                "answerOptions": [
-                { "text": "A physical instrument used to measure the phase difference between two waveforms.", "rationale": "A phasor is a mathematical concept, not a physical piece of laboratory equipment.", "isCorrect": false },
-                { "text": "The ratio of true power to apparent power in an RLC circuit.", "rationale": "This is the definition of the Power Factor, not a phasor.", "isCorrect": false },
-                { "text": "A specific frequency at which inductive and capacitive reactances cancel out.", "rationale": "This defines the resonant frequency ($f_o$), not a phasor.", "isCorrect": false },
-                { "text": "A complex number used to represent a sinusoidal wave, taking into account both amplitude and phase angle.", "rationale": "Phasors allow AC sine waves to be represented as two-dimensional vectors with real and imaginary components to simplify circuit analysis.", "isCorrect": true }
-                ],
-                "hint": "Think about how we represent rotating AC waveforms mathematically on an XY axis."
-            },
-            {
-                "question": "As the frequency of the applied sine wave increases, what happens theoretically to the inductive reactance ($X_L$) and capacitive reactance ($X_C$)?",
-                "answerOptions": [
-                { "text": "Both $X_L$ and $X_C$ increase.", "rationale": "This is incorrect because one reactance has a direct relationship with frequency, while the other has an inverse relationship.", "isCorrect": false },
-                { "text": "$X_L$ increases, while $X_C$ decreases.", "rationale": "Because $X_L = 2\\pi fL$ (direct) and $X_C = 1 / (2\\pi fC)$ (inverse), increasing frequency raises inductive opposition and lowers capacitive opposition.", "isCorrect": true },
-                { "text": "Both $X_L$ and $X_C$ decrease.", "rationale": "This contradicts the formulas for how these components react to high-frequency signals.", "isCorrect": false },
-                { "text": "$X_L$ decreases, while $X_C$ increases.", "rationale": "This has the relationships backward. Inductors block high frequencies, while capacitors pass them easily.", "isCorrect": false }
-                ],
-                "hint": "Look at the location of the frequency variable ($f$) in the mathematical formulas for $X_L$ and $X_C$."
-            },
-            {
-                "question": "Why does the lab procedure instruct you to measure the voltage across the resistor ($V_R$) to determine the phase of the total circuit current?",
-                "answerOptions": [
-                { "text": "Because the oscilloscope cannot physically connect to capacitors or inductors safely.", "rationale": "The oscilloscope can safely connect to any of these low-voltage lab components; safety is not the reason for this specific measurement choice.", "isCorrect": false },
-                { "text": "Because $V_R$ is always equal to the total supply voltage ($V_S$) in an AC circuit.", "rationale": "In a series RLC circuit, the supply voltage is the vector sum of all component voltages, so $V_R$ rarely equals $V_S$ unless the circuit is at resonance.", "isCorrect": false },
-                { "text": "Because the current and voltage are always perfectly in phase across an ideal resistor.", "rationale": "Since current is the same everywhere in a series circuit, and a resistor causes no phase shift, the shape and phase of $V_R$ perfectly mimics the total current.", "isCorrect": true },
-                { "text": "Because the resistor is the only component that does not drop any voltage.", "rationale": "Resistors always drop voltage when current flows through them according to Ohm's Law.", "isCorrect": false }
-                ],
-                "hint": "Consider the unique property of an ideal resistor regarding phase shift compared to inductors and capacitors."
-            },
-            {
-                "question": "Calculate the theoretical resonant frequency ($f_o$) of a series RLC circuit with $L = 50 \\text{ mH}$ and $C = 20 \\mu\\text{F}$.",
-                "answerOptions": [
-                { "text": "$159.15 \\text{ Hz}$", "rationale": "Using $f_o = \\frac{1}{2\\pi\\sqrt{LC}}$, we get $\\frac{1}{2\\pi\\sqrt{0.05 \\times 0.00002}} = \\frac{1}{2\\pi\\sqrt{10^{-6}}} = \\frac{1}{2\\pi \\times 0.001} \\approx 159.15 \\text{ Hz}$.", "isCorrect": true },
-                { "text": "$1000.0 \\text{ Hz}$", "rationale": "This value ignores the $2\\pi$ in the denominator of the resonant frequency formula.", "isCorrect": false },
-                { "text": "$318.3 \\text{ Hz}$", "rationale": "This is the result of missing a factor of 2 in the calculation, often from misplacing the square root or miscalculating the $2\\pi$ term.", "isCorrect": false },
-                { "text": "$50.3 \\text{ Hz}$", "rationale": "This is a distractor value utilizing common numbers from other standard lab experiments.", "isCorrect": false }
-                ],
-                "hint": "Use the formula $f_o = \\frac{1}{2\\pi\\sqrt{LC}}$ and be very careful with the milli ($10^{-3}$) and micro ($10^{-6}$) conversions."
-            },
-            {
-                "question": "A series RL circuit has a resistor of $1.5 \\text{ k}\\Omega$ and an inductive reactance ($X_L$) of $2.0 \\text{ k}\\Omega$ at a specific frequency. What is the total magnitude of the impedance ($Z$)?",
-                "answerOptions": [
-                { "text": "$3.5 \\text{ k}\\Omega$", "rationale": "This is the incorrect algebraic sum. Reactance and resistance are $90^{\\circ}$ out of phase and must be added as vectors.", "isCorrect": false },
-                { "text": "$0.5 \\text{ k}\\Omega$", "rationale": "This is the incorrect algebraic difference between the two values.", "isCorrect": false },
-                { "text": "$4.5 \\text{ k}\\Omega$", "rationale": "This is an arbitrary distractor value.", "isCorrect": false },
-                { "text": "$2.5 \\text{ k}\\Omega$", "rationale": "Using the Pythagorean theorem for impedance vectors: $Z = \\sqrt{R^2 + X_L^2} = \\sqrt{1.5^2 + 2.0^2} = \\sqrt{2.25 + 4} = \\sqrt{6.25} = 2.5 \\text{ k}\\Omega$.", "isCorrect": true }
-                ],
-                "hint": "Remember that resistance and reactance form the legs of a right-angled triangle on a phasor diagram."
-            },
-            {
-                "question": "According to the lab manual and setup, what specific hardware is used to easily adjust and supply the required values of resistance, capacitance, and inductance for the circuits?",
-                "answerOptions": [
-                { "text": "Function generators", "rationale": "The function generator provides the AC voltage signal, not the physical R, L, or C component values.", "isCorrect": false },
-                { "text": "Decade boxes", "rationale": "Decade boxes contain internal arrays of components connected to rotary switches, allowing users to dial in exact R, L, or C values quickly.", "isCorrect": true },
-                { "text": "Digital multimeters", "rationale": "Multimeters measure electrical properties; they do not supply or act as the components in the circuit.", "isCorrect": false },
-                { "text": "Oscilloscope probes", "rationale": "Probes are used strictly for measuring and observing the voltage waveforms.", "isCorrect": false }
-                ],
-                "hint": "These devices usually have multiple rotary dials labeled with multipliers like $10^0$, $10^1$, and $10^2$."
-            },
-            {
-                "question": "If you measure a phase angle of $-45^{\\circ}$ in a series RLC circuit, what does this tell you about the relationship between the components at that specific frequency?",
-                "answerOptions": [
-                { "text": "The inductive reactance is exactly equal to the resistance.", "rationale": "If inductive reactance equaled resistance, the phase angle would be $+45^{\\circ}$, not negative.", "isCorrect": false },
-                { "text": "The circuit is at perfect resonance.", "rationale": "At perfect resonance, the phase angle is exactly $0^{\\circ}$.", "isCorrect": false },
-                { "text": "The capacitive reactance is greater than the inductive reactance.", "rationale": "A negative phase angle means the current is leading the voltage, which is the defining characteristic of a circuit where capacitive reactance dominates.", "isCorrect": true },
-                { "text": "The total impedance is purely resistive.", "rationale": "If it were purely resistive, there would be no phase shift ($0^{\\circ}$).", "isCorrect": false }
-                ],
-                "hint": "A negative phase angle means the circuit is acting 'capacitively' (ELI the ICE man)."
-            },
-            {
-                "question": "In a series RC circuit, the supply voltage is $10 \\text{ V}$ rms, and the voltage across the resistor is measured at $6 \\text{ V}$ rms. What is the expected voltage across the capacitor ($V_C$)?",
-                "answerOptions": [
-                { "text": "$4 \\text{ V}$ rms", "rationale": "This incorrectly assumes simple algebraic subtraction ($10 - 6 = 4$), which ignores the vector nature of AC voltages.", "isCorrect": false },
-                { "text": "$16 \\text{ V}$ rms", "rationale": "This is the incorrect algebraic sum, completely ignoring Kirchhoff's laws for AC circuits.", "isCorrect": false },
-                { "text": "$8 \\text{ V}$ rms", "rationale": "Because the voltages form a right triangle ($V_S^2 = V_R^2 + V_C^2$), we calculate $V_C = \\sqrt{10^2 - 6^2} = \\sqrt{100 - 36} = \\sqrt{64} = 8 \\text{ V}$ rms.", "isCorrect": true },
-                { "text": "$11.6 \\text{ V}$ rms", "rationale": "This incorrect calculation attempts to add the squares of the supply and resistor voltages instead of subtracting them.", "isCorrect": false }
-                ],
-                "hint": "Apply the Pythagorean theorem to the voltage phasors, where the supply voltage ($V_S$) is the hypotenuse."
-            }
-        ];
-
-        // State Variables
-        let currentQuestionIndex = 0;
-        let selectedAnswers = {};
-        let showResults = false;
-        let showHint = false;
-
-        // Render functions
-        function renderView() {
-            const app = document.getElementById('app');
-            if (showResults) {
-                app.innerHTML = getResultsHtml();
-            } else {
-                app.innerHTML = getQuestionHtml();
-            }
-
-            // Tell MathJax to typeset the newly injected HTML
-            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
-                MathJax.typesetClear();
-                MathJax.typesetPromise([app]).catch((err) => console.log('MathJax error: ', err));
-            }
+    <!-- FontAwesome for premium design icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        
+        /* Strict High-Contrast Dark Mode Overrides */
+        .dark-theme {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+        }
+        .dark-theme .bg-card {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        /* Force Input, Select, and Textarea elements to render in high-contrast light text in Dark Theme */
+        .dark-theme select,
+        .dark-theme input,
+        .dark-theme textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+        
+        /* Force dropdown options to use light text on dark backgrounds to bypass browser-specific defaults */
+        .dark-theme select option {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+        }
+        
+        /* Fix label contrast inside Dark Theme */
+        .dark-theme label {
+            color: #cbd5e1 !important;
+        }
+        
+        /* Fix general text utilities forced by tailwind classes */
+        .dark-theme .text-slate-900,
+        .dark-theme .text-slate-850,
+        .dark-theme .text-slate-800,
+        .dark-theme .text-slate-700,
+        .dark-theme .text-slate-600 {
+            color: #cbd5e1 !important;
+        }
+        
+        .dark-theme .text-slate-500,
+        .dark-theme .text-slate-400 {
+            color: #94a3b8 !important;
+        }
+        
+        /* Generic background adjustments inside Dark Mode */
+        .dark-theme .bg-slate-50 {
+            background-color: #0f172a !important;
+        }
+        .dark-theme .bg-slate-100 {
+            background-color: #334155 !important;
+        }
+        .dark-theme .bg-slate-200 {
+            background-color: #475569 !important;
+        }
+        
+        /* Toggle hover colors in dark mode */
+        .dark-theme .hover\:bg-slate-100:hover {
+            background-color: #334155 !important;
+        }
+        .dark-theme .hover\:bg-slate-50:hover {
+            background-color: #1e293b !important;
         }
 
-        function getQuestionHtml() {
-            const currentQuestion = quizData[currentQuestionIndex];
-            const progress = ((currentQuestionIndex) / quizData.length) * 100;
-            const isNextDisabled = selectedAnswers[currentQuestionIndex] === undefined;
+        .correct-bg { background-color: rgba(16, 185, 129, 0.15); border-color: rgb(16, 185, 129); }
+        .incorrect-bg { background-color: rgba(239, 68, 68, 0.15); border-color: rgb(239, 68, 68); }
+        
+        /* Hide scrollbars but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen transition-colors duration-200">
 
-            let optionsHtml = '';
-            currentQuestion.answerOptions.forEach((option, index) => {
-                const isSelected = selectedAnswers[currentQuestionIndex] === index;
-                const baseClasses = "w-full text-left p-5 rounded-xl border-2 transition-all duration-200";
-                const selectedClasses = "border-blue-500 bg-blue-50 text-blue-900";
-                const unselectedClasses = "border-gray-200 hover:border-blue-300 hover:bg-gray-50 text-gray-700";
-                
-                optionsHtml += `
-                    <button onclick="handleOptionSelect(${index})" class="${baseClasses} ${isSelected ? selectedClasses : unselectedClasses}">
-                        <span>${option.text}</span>
-                    </button>
-                `;
-            });
-
-            let hintSection = '';
-            if (!showHint) {
-                hintSection = `
-                    <button onclick="toggleHint()" class="text-sm text-amber-600 hover:text-amber-700 font-medium flex items-center">
-                        💡 Need a hint?
-                    </button>
-                `;
-            } else {
-                hintSection = `
-                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-                        <strong>Hint:</strong> <span>${currentQuestion.hint}</span>
+    <!-- Container wrapper -->
+    <div class="flex flex-col min-h-screen">
+        
+        <!-- Premium Navigation Header -->
+        <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50 px-6 py-4 border-b border-slate-800">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-lg">
+                        <i class="fa-solid fa-graduation-cap text-2xl"></i>
                     </div>
-                `;
-            }
-
-            return `
-                <div class="py-12 px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-3xl mx-auto">
-                        <!-- Header & Progress -->
-                        <div class="mb-8">
-                            <h1 class="text-3xl font-bold text-gray-900 mb-4 text-center">RLC AC Circuits</h1>
-                            <div class="flex justify-between text-sm text-gray-500 font-medium mb-2">
-                                <span>Question ${currentQuestionIndex + 1} of ${quizData.length}</span>
-                                <span>${Math.round(progress)}% Completed</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
-                            </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-tight">C# Complete Curriculum Canvas</h1>
+                        <p class="text-xs text-indigo-300">100 Multiple-Choice Questions + Theory Labs + Memory Sandbox</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Diagnostic summary trackers -->
+                    <div class="hidden lg:flex space-x-3">
+                        <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                            <p class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Diagnostic Score</p>
+                            <p id="score-text" class="text-sm font-black text-indigo-300 font-mono">0 / 100</p>
                         </div>
+                        <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                            <p class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Bookmarked</p>
+                            <p id="flagged-count" class="text-sm font-black text-amber-400 font-mono">0</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button id="theme-btn" onclick="toggleTheme()" class="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-xl border border-slate-700 transition">
+                        <i class="fa-solid fa-moon text-amber-400" id="theme-icon"></i>
+                    </button>
+                    
+                    <button onclick="resetAllProgress()" class="bg-rose-600 hover:bg-rose-500 px-4 py-2 rounded-xl font-bold text-sm transition shadow-lg shadow-rose-900/30">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Reset State
+                    </button>
+                </div>
+            </div>
+        </header>
 
-                        <!-- Question Card -->
-                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                            <div class="p-8">
-                                <h2 class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
-                                   <span>${currentQuestion.question}</span>
-                                </h2>
-
-                                <div class="space-y-3">
-                                    ${optionsHtml}
-                                </div>
-
-                                <!-- Hint Section -->
-                                <div class="mt-6">
-                                    ${hintSection}
-                                </div>
-                            </div>
-
-                            <!-- Navigation Footer -->
-                            <div class="bg-gray-50 px-8 py-5 border-t border-gray-100 flex justify-between items-center">
-                                <button onclick="handlePrev()" ${currentQuestionIndex === 0 ? 'disabled' : ''} class="font-medium py-2 px-6 rounded-lg transition duration-200 ${currentQuestionIndex === 0 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-200'}">
-                                    Previous
-                                </button>
-                                <button onclick="handleNext()" ${isNextDisabled ? 'disabled' : ''} class="font-semibold py-3 px-8 rounded-lg transition duration-200 ${isNextDisabled ? 'bg-blue-300 text-white cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md'}">
-                                    ${currentQuestionIndex === quizData.length - 1 ? 'Submit Quiz' : 'Next Question'}
-                                </button>
-                            </div>
+        <!-- Main Body Layout -->
+        <div class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Side Panel (4 Columns) -->
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Diagnostic Performance Matrix -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 bg-card transition-all">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-bar text-indigo-500"></i> Course Syllabus Checklist
+                    </h2>
+                    
+                    <div class="flex items-center space-x-4 mb-5">
+                        <div class="relative w-16 h-16 flex items-center justify-center bg-indigo-50 dark:bg-slate-800 rounded-full shrink-0">
+                            <span id="progress-percent" class="font-extrabold text-indigo-600 dark:text-indigo-400 text-lg">0%</span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Diagnostic Completion</p>
+                            <p id="progress-desc" class="text-sm font-black">0 of 100 Answered</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Scrollable list of tutorials -->
+                    <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Topic Mastery Index</p>
+                        <div id="diagnostic-matrix" class="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                            <!-- Injected dynamically -->
                         </div>
                     </div>
                 </div>
-            `;
+
+                <!-- Live C# Sandbox Terminal -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 bg-card transition-all">
+                    <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-microchip text-emerald-500"></i> C# CLI Memory Sandbox
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-4">Select a C# architectural concept, manipulate value states, and inspect compiler evaluations.</p>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-600 dark:text-slate-200">Concept:</label>
+                            <select id="sandbox-selector" onchange="loadSandboxSnippet()" class="w-full mt-1 p-2.5 border rounded-xl bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-indigo-500">
+                                <option value="swap">Swap Parameters (ref vs out)</option>
+                                <option value="ternary">Ternary String Interpolator</option>
+                                <option value="formatting">Floating Point Format Precision</option>
+                                <option value="polymorphism">Dynamic Polymorphic Soundboard</option>
+                            </select>
+                        </div>
+                        
+                        <div id="sandbox-inputs" class="space-y-3">
+                            <!-- Render inputs dynamically -->
+                        </div>
+                        
+                        <button onclick="runSandboxCode()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/10">
+                            <i class="fa-solid fa-play"></i> Compile & Run Snippet
+                        </button>
+                    </div>
+
+                    <!-- Sandbox Output Console -->
+                    <div class="mt-4 bg-slate-950 p-4 rounded-xl border border-slate-900 text-xs text-slate-300 font-mono">
+                        <div class="flex justify-between border-b border-slate-900 pb-1.5 mb-2.5">
+                            <span class="text-[9px] text-slate-500 uppercase tracking-wider">Standard Out Terminal</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                        </div>
+                        <pre id="sandbox-output" class="whitespace-pre-wrap leading-relaxed">Console ready. Select a concept and run.</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Panel Area (8 Columns) -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Main Controls Tab Header -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 bg-card flex flex-wrap gap-3 items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-slate-850 text-indigo-600 dark:text-indigo-400 uppercase">Mode</span>
+                        <div class="flex bg-slate-100 dark:bg-slate-850 p-1 rounded-xl">
+                            <button onclick="setQuizMode('mcq')" id="mode-mcq-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-white dark:bg-slate-700 shadow-sm">Multiple Choice</button>
+                            <button onclick="setQuizMode('theory')" id="mode-theory-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-500">Theory Workbook</button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <!-- Bookmarked Filter -->
+                        <button onclick="toggleBookmarkFilter()" id="bookmark-filter-btn" class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1.5 hover:bg-slate-50 dark:border-slate-800">
+                            <i class="fa-solid fa-bookmark text-amber-500"></i> Bookmarks
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MCQ Core Panel -->
+                <div id="mcq-panel" class="space-y-6">
+                    <!-- Nav tabs for MCQs -->
+                    <div class="flex overflow-x-auto py-1.5 space-x-2 scroll-smooth border-b border-slate-200 dark:border-slate-800 pb-2 no-scrollbar">
+                        <!-- Injected dynamic tabs -->
+                    </div>
+
+                    <!-- Current Active Header -->
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 bg-card flex flex-wrap justify-between items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <span id="active-tutorial-name" class="font-extrabold text-slate-850 dark:text-slate-100">Tutorial 1</span>
+                            <span class="text-xs text-slate-400">| Complete 10 questions inside this unit</span>
+                        </div>
+                        <div class="flex space-x-1" id="question-page-dots">
+                            <!-- 1-10 dots -->
+                        </div>
+                    </div>
+
+                    <!-- Question Card Holder -->
+                    <div id="question-holder" class="space-y-4">
+                        <!-- Main Card -->
+                    </div>
+                    
+                    <!-- Pagination Controls -->
+                    <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 bg-card">
+                        <button onclick="prevQuestion()" id="prev-btn" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-bold hover:bg-slate-200 transition disabled:opacity-50 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-left"></i> Prev
+                        </button>
+                        
+                        <!-- Question grid picker modal-like link -->
+                        <div class="relative">
+                            <button onclick="toggleGridSelector()" class="text-xs font-mono font-black text-slate-500 hover:text-indigo-600 transition">
+                                <span id="question-index-label">Question 1 of 10</span> <i class="fa-solid fa-chevron-down ml-1"></i>
+                            </button>
+                            <!-- Tiny Grid Selector Dropdown -->
+                            <div id="grid-selector" class="hidden absolute bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-800 p-3 rounded-xl shadow-xl z-20 w-48">
+                                <p class="text-[9px] text-slate-400 uppercase font-black mb-2 text-center">Jump to Question</p>
+                                <div class="grid grid-cols-5 gap-1.5 text-center" id="grid-selector-nodes">
+                                    <!-- Injected grid -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="nextQuestion()" id="next-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition flex items-center gap-1 shadow-lg shadow-indigo-900/10">
+                            Next <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Theory Workbook Panel (Hidden by default) -->
+                <div id="theory-panel" class="hidden space-y-6">
+                    <div class="bg-indigo-50 dark:bg-indigo-950/40 border-l-4 border-indigo-600 p-5 rounded-r-2xl">
+                        <h3 class="font-bold text-indigo-950 dark:text-indigo-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-pencil-alt"></i> Theory Prep Workbook & Code Planner
+                        </h3>
+                        <p class="text-xs text-indigo-700 dark:text-indigo-300 mt-1 leading-relaxed">Type your structures, logic loops, or comparison tables inside the provided workspace. Click "Compare with C# Solution" to self-evaluate with exact scoring rubric mappings.</p>
+                    </div>
+                    
+                    <!-- Tutorial selection for theory -->
+                    <div class="flex overflow-x-auto py-1.5 space-x-2 border-b border-slate-200 dark:border-slate-850 pb-2 no-scrollbar" id="theory-tabs">
+                        <!-- Dynamic theory syllabus tabs -->
+                    </div>
+
+                    <div id="theory-workbook-holder" class="space-y-6">
+                        <!-- Dynamic theory structures -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="mt-auto bg-slate-950 text-slate-500 text-xs text-center py-6 border-t border-slate-900">
+            <p>© 2026 C# complete Syllabus prep console platform. All answers loaded from "All Tutorials.pdf".</p>
+        </footer>
+    </div>
+
+    <!-- Complete 100 MCQ Database mapping & Theory Keys -->
+    <script>
+        // High fidelity database containing all 100 questions literally matching the input file
+        const tutorialsData = {
+            t1: {
+                title: "1. C# I/O",
+                color: "indigo",
+                questions: [
+                    { id: "t1-q1", q: "Given string person = \"John\";, which line of code produces the output Name: John?", code: "string person = \"John\";", options: ["Console.WriteLine(\"Name: {person \");", "Console.WriteLine($\"Name: {person}\");", "Console.WriteLine(\"Name: \" + (person );", "Console.WriteLine($\"Name: person\");"], ans: 1, explanation: "Option B utilizes String Interpolation ($ character), which resolves the variable inside the brackets into its runtime value." },
+                    { id: "t1-q2", q: "What is the output of the following C# code? (Assume the culture is en-US)", code: "double price = 19.99;\nConsole.WriteLine($\"Price: {price:C}\");", options: ["Price: 19.99", "Price: C19.99", "Price: $19.99", "Price: 19.99:C)"], ans: 2, explanation: "The currency standard format specifier (:C) formats numeric values into local currency formats ($19.99 for en-US)." },
+                    { id: "t1-q3", q: "How do you format a floating-point number to display exactly two decimal places?", options: ["{myFloat:D2}", "{myFloat:P2}", "{myFloat:F2}", "{myFloat:N:2}"], ans: 2, explanation: "The Fixed-Point specifier (:F2) ensures exactly two decimal spaces are formatted for floating-point calculations." },
+                    { id: "t1-q4", q: "What is the primary purpose of specifying a width in a format string, like {myVar, 10}?", options: ["To limit the number of characters displayed.", "To set the total space the output will occupy, padding if necessary.", "To multiply the variable's value by the specified width.", "To set the font size of the output."], ans: 1, explanation: "Alignment specifications provide width padding. A positive integer aligns to the right, padding the left space." },
+                    { id: "t1-q5", q: "What is the output of this code snippet?", code: "int number = 42;\nConsole.WriteLine($\"Result: |{number, -10}|\");", options: ["Result: |42|", "Result: |42        |", "Result: |-42|", "Result: |4200000000-|"], ans: 1, explanation: "The alignment width of -10 represents a field width of 10, left-aligned, which pads the remaining 8 spaces to the right." },
+                    { id: "t1-q6", q: "Which method is used to read a full line of text input from the console?", options: ["Console.Read()", "Console.ReadKey()", "Console.ReadLine()", "Console.In.Read()"], ans: 2, explanation: "Console.ReadLine() waits and captures all stream characters entered by the user until they press the Enter key." },
+                    { id: "t1-q7", q: "What is the return type of the Console.ReadLine() method?", options: ["int", "char", "string", "object"], ans: 2, explanation: "Console.ReadLine() always captures user terminal input streams as standard string datatypes." },
+                    { id: "t1-q8", q: "What will happen if a user enters \"abc\" when the following code is executed?", code: "Console.WriteLine(\"Enter your age:\");\nint age = Convert.ToInt32(Console.ReadLine());", options: ["The program will assign 0 to the age variable.", "The program will ask the user to enter the input again.", "The program will compile with an error.", "The program will throw a FormatException at runtime."], ans: 3, explanation: "Non-numeric strings like \"abc\" cannot be parsed into integers, throwing a System.FormatException at runtime." },
+                    { id: "t1-q9", q: "What is the output of the following code?", code: "int a = 5;\nint b = 10;\nConsole.WriteLine($\"The sum is: {a + b}\");", options: ["The sum is: a+b", "The sum is: {a+b}", "The sum is: 15", "The code will not compile."], ans: 2, explanation: "Arithmetic operations placed within interpolated curly boundaries are evaluated before string rendering." },
+                    { id: "t1-q10", q: "What is the key difference between Console.ReadKey() and Console.ReadLine()?", options: ["ReadKey() reads a string, while ReadLine() reads a single character.", "ReadKey() requires the user to press Enter, while ReadLine() does not.", "ReadKey() reads a single key press immediately, while ReadLine() reads all characters until the user presses Enter.", "There is no difference; they are aliases for the same method."], ans: 2, explanation: "ReadKey() intercepts single keystroke events immediately without waiting for line-breaks or carriage returns." }
+                ]
+            },
+            t2: {
+                title: "2. Conditions",
+                color: "blue",
+                questions: [
+                    { id: "t2-q1", q: "What is the output of the following code snippet?", code: "int x = 10;\nint y = 5;\nif (x > y) { Console.Write(\"A\"); }\nif (x - y == 5) { Console.Write(\"B\"); }\nelse { Console.Write(\"C\"); }", options: ["A", "AC", "AB", "C"], ans: 2, explanation: "Both conditions are evaluated independently. x > y (10 > 5 is True, prints 'A'). x - y == 5 (5 == 5 is True, prints 'B'). Total: 'AB'." },
+                    { id: "t2-q2", q: "What value will be assigned to the result variable?", code: "int a = 5;\nint b = 12;\nint result = b % a;", options: ["2.4", "2", "0", "3"], ans: 1, explanation: "The Modulo operator (%) calculates integer division remainders. 12 % 5 leaves a remainder of 2." },
+                    { id: "t2-q3", q: "Which value will grade contain after this code executes?", code: "int score = 85;\nchar grade = 'F';\nif (score >= 90) { grade = 'A'; }\nelse if (score >= 80) { grade = 'B'; }\nelse if (score >= 70) { grade = 'C'; }", options: ["'A'", "'B'", "'C'", "'F'"], ans: 1, explanation: "Since 85 is less than 90 but greater than or equal to 80, the else-if block executes, setting grade to 'B'." },
+                    { id: "t2-q4", q: "What is the value of z after the following code runs?", code: "int x = 5;\nint y = 10;\nint z = x++ * --y;", options: ["50", "45", "54", "60"], ans: 1, explanation: "Postfix x++ evaluates as 5 first (then increments to 6). Prefix --y decrements to 9 immediately. 5 * 9 = 45." },
+                    { id: "t2-q5", q: "What is the output of this code?", code: "int value = 3;\nswitch (value)\n{\n    case 1: Console.Write(\"One\"); break;\n    case 2:\n    case 3: Console.Write(\"Two or Three\"); break;\n    case 4: Console.Write(\"Four\"); break;\n    default: Console.Write(\"Other\"); break;\n}", options: ["Three", "Two or Three", "Two", "The code will not compile due to the missing case 3 body."], ans: 1, explanation: "C# allows switch fall-through only when the case blocks are empty, meaning both case 2 and case 3 share 'Two or Three'." },
+                    { id: "t2-q6", q: "What value is assigned to message?", code: "int temperature = 20;\nstring message = temperature > 15 ? \"Warm\" : \"Cold\";", options: ["20", "\"Warm\"", "\"Cold\"", "The code will cause a compile-time error."], ans: 1, explanation: "Using the ternary operator, since 20 > 15 evaluates to True, the first option (\"Warm\") is chosen." },
+                    { id: "t2-q7", q: "Due to operator precedence, what is the final value of calculation?", code: "double calculation = 10.0 + 4.0 * 2.0 / 2.0;", options: ["14.0", "12.0", "7.0", "28.0"], ans: 0, explanation: "Multiplication and division run first (4 * 2 / 2 = 4), followed by addition (10 + 4 = 14)." },
+                    { id: "t2-q8", q: "What is the output of the following code?", code: "int p = 10;\nif (p > 5 || p < 0) { Console.Write(\"True\"); }\nelse { Console.Write(\"False\"); }", options: ["True", "False", "The code will not compile.", "No output is produced."], ans: 0, explanation: "The logical OR (||) operator returns true if at least one side is true. Since 10 > 5 is true, it evaluates to True." },
+                    { id: "t2-q9", q: "What will be the value of count after these operations?", code: "int count = 10;\ncount += 5;\ncount *= 2;", options: ["25", "20", "30", "17"], ans: 2, explanation: "First addition (10 + 5 = 15), then multiplication (15 * 2 = 30)." },
+                    { id: "t2-q10", q: "What output is generated by this code snippet?", code: "int age = 18;\nbool hasLicense = false;\nif (age >= 18 && hasLicense) { Console.Write(\"Can drive\"); }\nelse { Console.Write(\"Cannot drive\"); }", options: ["Can drive", "Cannot drive", "The code has a syntax error.", "An exception is thrown at runtime."], ans: 1, explanation: "The logical AND (&&) requires both conditions to be true. Since hasLicense is false, the else block runs." }
+                ]
+            },
+            t3: {
+                title: "3. Loops",
+                color: "cyan",
+                questions: [
+                    { id: "t3-q1", q: "What is the output of the following code snippet?", code: "for (int i = 0; i < 4; i++)\n{\n}\nConsole.Write(i);", options: ["1234", "0123", "01234", "The code produces a compile error."], ans: 3, explanation: "The loop variable 'i' is declared inside the for loop's scope. Accessing it outside the loop block causes a compile-time error." },
+                    { id: "t3-q2", q: "How many times will the following loop print \"Hello\"?", code: "int count = 5;\ndo { Console.Write(\"Hello\"); } while (count < 5);", options: ["5 times", "0 times", "1 time", "Infinitely"], ans: 2, explanation: "A do-while loop is guaranteed to run at least once because the condition is checked *after* the body executes." },
+                    { id: "t3-q3", q: "What is the output of this code that uses a while loop?", code: "int i = 5;\nwhile (i > 1) { Console.Write(i); i--; }", options: ["54321", "5432", "4321", "12345"], ans: 1, explanation: "Loop conditions are checked at values 5, 4, 3, 2. When i reaches 1, the condition (1 > 1) is false, ending the loop." },
+                    { id: "t3-q4", q: "What is the purpose of the break statement in a loop?", code: "for (int i = 0; i < 10; i++)\n{\n    if (i == 3) { break; }\n    Console.Write(i);\n}", options: ["It skips the current iteration and continues with the next.", "It terminates the loop immediately.", "It causes a compile-time error.", "It prints the value 3."], ans: 1, explanation: "The break statement exits the nearest enclosing loop immediately, stopping all remaining iterations." },
+                    { id: "t3-q5", q: "What is the final value of sum after the foreach loop?", code: "int[] numbers = { 10, 20, 30 };\nint sum = 0;\nforeach (int num in numbers) { sum += num; }", options: ["30", "0", "60", "102030"], ans: 2, explanation: "The loop sums all elements of the array: 10 + 20 + 30 = 60." },
+                    { id: "t3-q6", q: "What is the output of the code below, which uses a continue statement?", code: "for (int i = 1; i <= 4; i++)\n{\n    if (i == 3) { continue; }\n    Console.Write(i);\n}", options: ["12", "124", "1234", "123"], ans: 1, explanation: "The continue statement skips the rest of the current iteration. When i == 3, the print step is skipped. Output: '124'." },
+                    { id: "t3-q7", q: "How many times will the inner loop execute in total?", code: "int totalExecutions = 0;\nfor (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 4; j++) {\n        totalExecutions++;\n    }\n}", options: ["7", "3", "4", "12"], ans: 3, explanation: "The outer loop runs 3 times, and the inner loop runs 4 times per outer loop pass. Total iterations = 3 * 4 = 12." },
+                    { id: "t3-q8", q: "Which of the following statements correctly describes the code's behavior?", code: "for (int i = 0; i < 3; i++) {\n    // Do something\n}\nConsole.WriteLine(i);", options: ["It prints 3.", "It prints 2.", "It results in a compile error.", "It prints 0."], ans: 2, explanation: "Because the variable 'i' is defined locally inside the loop initializer, it does not exist in the outer scope, causing a compile error." },
+                    { id: "t3-q9", q: "Which loop is guaranteed to execute its body at least once?", options: ["for", "while", "do-while", "foreach"], ans: 2, explanation: "The do-while loop is structured to evaluate the conditional expression at the end of each pass." },
+                    { id: "t3-q10", q: "What is the output of this loop?", code: "int j = 0;\nwhile (j < 5) Console.Write(j); { j++; }", options: ["12345", "01234", "012345", "1234"], ans: 1, explanation: "Note: While structured as an infinite loop in raw C# if executed with the misplaced block, the textbook keys this answer as '01234'." }
+                ]
+            },
+            t4: {
+                title: "4. Arrays",
+                color: "teal",
+                questions: [
+                    { id: "t4-q1", q: "Which is the correct syntax to declare an array of integers named scores?", options: ["int scores new array[];", "array<int> scores;", "int[] scores;", "int scores<>;"], ans: 2, explanation: "In C#, array types are declared by putting square brackets immediately after the data type: `int[] scores`." },
+                    { id: "t4-q2", q: "Which line correctly creates an array that can hold 10 strings?", options: ["string[] names = new string[10];", "string names = new string[10];", "string [10] names = new string[];", "string[] names = new array [10];"], ans: 0, explanation: "To allocate memory for a new array of strings, use `new string[10]`." },
+                    { id: "t4-q3", q: "What is the output of the following code snippet?", code: "string[] names = { \"Ann\", \"Bob\", \"Charlie\" };\nConsole.Write(names[1]);", options: ["Ann", "Bob", "Charlie", "The code will throw an exception."], ans: 1, explanation: "Arrays use 0-based indexing. names[0] is 'Ann', names[1] is 'Bob', and names[2] is 'Charlie'." },
+                    { id: "t4-q4", q: "What is the output of this foreach loop?", code: "int[] data = { 5, 10, 15 };\nint total = 0;\nforeach (int item in data) { total += item; }\nConsole.Write(total);", options: ["15", "51015", "30", "The code will not compile."], ans: 2, explanation: "The foreach loop sums the elements of the array: 5 + 10 + 15 = 30." },
+                    { id: "t4-q5", q: "What does the Length property of an array return?", code: "char[] letters = { 'a', 'b', 'c', 'd' };\nConsole.Write(letters.Length);", options: ["The index of the last element (3).", "The total number of elements (4).", "The size of the array in memory.", "The first element ('a')."], ans: 1, explanation: "The Length property returns the total count of elements inside the array (4 elements)." },
+                    { id: "t4-q6", q: "What is the result of executing the following code?", code: "int[] numbers = new int [3]; // Indices are 0, 1, 2\nConsole.Write(numbers[3]);", options: ["It prints 0.", "It causes a compile-time error.", "It throws an IndexOutOfRangeException at runtime.", "It prints a random number."], ans: 2, explanation: "Indices for an array of size 3 only span 0 to 2. Attempting to access index 3 throws an IndexOutOfRangeException." },
+                    { id: "t4-q7", q: "What is the default value of an element in a newly created bool array?", code: "bool[] flags = new bool[5];\nConsole.Write(flags[0]);", options: ["true", "null", "0", "false"], ans: 3, explanation: "C# arrays initialize element cells to their respective type defaults. The default value for bool is 'false'." },
+                    { id: "t4-q8", q: "What happens when you try to compile and run this code?", code: "int[] numbers = { 10, 20, 30 };\nforeach (int num in numbers) { num = 5; }", options: ["The array elements become 5, 5, 5.", "The code runs, but the array remains 10, 20, 30.", "It results in a compile-time error.", "It throws an exception at runtime."], ans: 2, explanation: "The iteration variable inside a foreach loop is read-only. Modifying it causes a compile-time error." },
+                    { id: "t4-q9", q: "Which snippet correctly initializes an array with specific values in a single line?", options: ["int[] values = new int(1, 2, 3);", "int[] values = {1, 2, 3};", "int values = new int[]; values = {1, 2, 3};", "int values[] = (1, 2, 3);"], ans: 1, explanation: "C# allows shorthand array initialization using curly braces: `int[] values = {1, 2, 3}`." },
+                    { id: "t4-q10", q: "What is the output of this code?", code: "string[] fruits = new string[3];\nfruits[0] = \"Apple\";\nfruits[2] = \"Cherry\";\nConsole.Write(fruits[1]);", options: ["Apple", "An empty string", "Cherry", "It prints nothing (null)."], ans: 3, explanation: "Since string is a reference type, uninitialized elements default to null, which prints nothing on the console." }
+                ]
+            },
+            t5: {
+                title: "5. Classes",
+                color: "green",
+                questions: [
+                    { id: "t5-q1", q: "What is the primary purpose of a class in C#?", options: ["To store a single primitive value.", "To act as a blueprint or template for creating objects.", "To execute a specific sequence of commands once.", "To define a looping structure."], ans: 1, explanation: "A class acts as a template or blueprint from which concrete instances (objects) are instantiated." },
+                    { id: "t5-q2", q: "Which line of code correctly creates an instance (object) of a class named Car?", options: ["Car myCar = new Car();", "Car myCar Car();", "new Car myCar;", "Car myCar;"], ans: 0, explanation: "Instantiating an object requires declaring the type, identifier, the 'new' keyword, and calling the constructor." },
+                    { id: "t5-q3", q: "What is a special method that is automatically called when an object of a class is created?", options: ["A Method", "A Destructor", "A Constructor", "A Property"], ans: 2, explanation: "The constructor is a special class method invoked during the 'new' operation to initialize object state." },
+                    { id: "t5-q4", q: "If a field inside a class is marked as private, where can it be accessed from?", code: "public class Account\n{\n    private double balance;\n}", options: ["From anywhere in the program.", "Only from classes that inherit from Account.", "Only from other code within the Account class itself.", "Only from other classes in the same file."], ans: 2, explanation: "The 'private' modifier restricts accessibility to the containing class block only." },
+                    { id: "t5-q5", q: "What is the output of the following code?", code: "public class Dog { public string sound = \"Woof\"; }\n// In another class's method:\nDog myDog = new Dog();\nConsole.Write(myDog.sound);", options: ["An empty string", "A compile-time error because sound is inaccessible.", "null", "Woof"], ans: 3, explanation: "Since the sound field is public, external blocks can read and write to it directly, producing 'Woof'." },
+                    { id: "t5-q6", q: "What is the output of the code that calls the Add method?", code: "public class Calculator { public int Add(int a, int b) { return a + b; } }\n// In another class:\nCalculator calc = new Calculator();\nConsole.Write(calc.Add(12, 5));", options: ["12", "5", "17", "The code will not compile."], ans: 2, explanation: "The public Add method evaluates 12 + 5 and returns 17." },
+                    { id: "t5-q7", q: "What is the value of the Name property after this code executes?", code: "public class Student {\n    public string Name { get; set; }\n    public Student(string studentName) { this.Name = studentName; }\n}\n// In another class:\nStudent s = new Student(\"Alice\");\nConsole.Write(s.Name);", options: ["null", "studentName", "Alice", "An error occurs because there is no default constructor."], ans: 2, explanation: "The parameterized constructor assigns the constructor argument \"Alice\" to the property Name using 'this.Name'." },
+                    { id: "t5-q8", q: "If you do not explicitly define a constructor in a C# class, what happens?", options: ["A compile-time error occurs.", "C# provides a public, parameter-less (default) constructor automatically.", "C# provides a private constructor automatically.", "You cannot create an instance of the class."], ans: 1, explanation: "If no constructor is defined, the C# compiler provides a default, parameter-less constructor automatically." },
+                    { id: "t5-q9", q: "Which statement is true regarding static methods?", options: ["They can only be called from an instance of an object.", "They are called on the class itself, not on an object instance.", "They can directly access instance fields (non-static members) of the class.", "A class can only have one static method."], ans: 1, explanation: "Static methods belong to the class type itself, and cannot access non-static instance fields directly." },
+                    { id: "t5-q10", q: "In a class, what is the purpose of the this keyword?", code: "public class Employee {\n    private string name;\n    public void SetName(string name) { this.name = name; }\n}", options: ["It refers to the parent class.", "It is used to create a new instance of the class.", "It refers to the current instance of the class.", "It refers to a static member of the class."], ans: 2, explanation: "The 'this' keyword refers to the current executing instance, which helps resolve naming collisions." }
+                ]
+            },
+            t6: {
+                title: "6. Params",
+                color: "emerald",
+                questions: [
+                    { id: "t6-q1", q: "What is the output of the following code, which demonstrates pass-by-value with a value type?", code: "public void ModifyValue (int num) { num = 20; }\n// In another method:\nint value = 10;\nModifyValue (value);\nConsole.Write(value);", options: ["20", "10", "0", "The code produces a compile error."], ans: 1, explanation: "Passing value types by value copies the variable's payload, so modifications inside the method do not affect the original variable." },
+                    { id: "t6-q2", q: "What is the output when passing a reference type (like a class object) by value?", code: "public class MyNumber { public int Value { get; set; } }\npublic void ModifyObject (MyNumber n) { n.Value = 99; }\n// In another method:\nMyNumber num = new MyNumber { Value = 50 };\nModifyObject(num);\nConsole.Write(num.Value);", options: ["50", "99", "0", "A NullReferenceException occurs."], ans: 1, explanation: "Since the reference to the object is passed by value, both pointers target the same object on the heap, allowing modifications to its state." },
+                    { id: "t6-q3", q: "What is the output when using the ref keyword to pass a value type by reference?", code: "public void ModifyWithRef (ref int num) { num = 20; }\n// In another method:\nint value = 10;\nModifyWithRef (ref value);\nConsole.Write(value);", options: ["10", "20", "A compile error occurs because value is not a reference type.", "0"], ans: 1, explanation: "The 'ref' modifier makes the parameter act as an alias of the original variable, meaning changes affect the caller directly." },
+                    { id: "t6-q4", q: "What is a key requirement for a variable passed as a parameter using the out keyword?", options: ["It must be initialized to a non-null value before the method call.", "It must be a reference type (e.g., a class).", "The calling code must ignore any value it has after the method returns.", "It must be assigned a value inside the method before the method returns."], ans: 3, explanation: "The C# compiler enforces that 'out' parameters must be assigned a value inside the called method before returning." },
+                    { id: "t6-q5", q: "What is the output of the following code using out parameters?", code: "public void GetCoordinates (out int x, out int y) { x = 100; y = 200; }\n// In another method:\nint a, b;\nGetCoordinates (out a, out b);\nConsole.Write(a + b);", options: ["0", "A compile error because a and b are not initialized.", "300", "A runtime exception is thrown."], ans: 2, explanation: "Since the method initializes both variables via out parameters, a and b are successfully assigned 100 and 200. Sum = 300." },
+                    { id: "t6-q6", q: "Which statement correctly describes a major difference between ref and out?", options: ["out parameters can be modified by the method, but ref parameters cannot.", "A variable passed as ref must be initialized before the call, whereas one passed as out does not need to be.", "ref can only be used with value types, and out only with reference types.", "There is no functional difference; they are interchangeable."], ans: 1, explanation: "'ref' parameters require pre-initialization by the caller. 'out' parameters do not require pre-initialization as the method is required to assign them a value." },
+                    { id: "t6-q7", q: "What is the output of the following code, where a method attempts to reassign a reference type parameter?", code: "public class MyNumber { public int Value { get; set; } }\npublic void TryReassign (MyNumber n) { n = new MyNumber { Value = 99 }; }\n// In another method:\nMyNumber num = new MyNumber { Value = 50 };\nTryReassign (num);\nConsole.Write(num.Value);", options: ["99", "50", "0", "A NullReferenceException occurs."], ans: 1, explanation: "Because the parameter 'n' is passed by value, reassigning 'n' inside the method only rebinds the local copy of the reference, leaving the original 'num' unchanged." },
+                    { id: "t6-q8", q: "What happens if the method from the previous question uses ref?", code: "public class MyNumber { public int Value { get; set; } }\npublic void ReassignWithRef (ref MyNumber n) { n = new MyNumber { Value = 99 }; }\n// In another method:\nMyNumber num = new MyNumber { Value = 50 };\nReassignWithRef (ref num);\nConsole.Write(num.Value);", options: ["50", "99", "The code will not compile.", "A NullReferenceException occurs."], ans: 1, explanation: "Passing the reference variable with 'ref' allows the method to change the original reference to point to a new instance (Value = 99)." },
+                    { id: "t6-q9", q: "What is the fundamental concept of \"pass-by-value\" for value types?", options: ["The method receives a pointer to the original variable.", "The method receives a copy of the original variable's value.", "The original variable is moved into the method's scope.", "The method can change the original variable directly without any special keywords."], ans: 1, explanation: "Pass-by-value creates a copy of the variable's value in a new stack frame, leaving the original data safe from external modification." },
+                    { id: "t10-q10", q: "What is the result of attempting to compile the following method?", code: "public void CheckValue (out int result) { Console.Write(\"Checking...\"); }", options: ["The code compiles without any issues.", "A runtime error occurs if the method is called.", "A compile-time error occurs because the 'out' parameter is not assigned.", "A warning is generated, but the code compiles."], ans: 2, explanation: "A compile-time error occurs because the method fails to assign a value to the 'out' parameter before exiting." }
+                ]
+            },
+            t7: {
+                title: "7. Encapsulation",
+                color: "purple",
+                questions: [
+                    { id: "t7-q1", q: "What is the core principle of encapsulation in object-oriented programming?", options: ["Allowing a class to inherit methods and fields from another class.", "Exposing all internal data of a class to other classes.", "Bundling data (fields) and the methods that operate on that data into a single unit, while hiding the internal state.", "Ensuring a method can have multiple implementations."], ans: 2, explanation: "Encapsulation keeps internal class details hidden (private) and exposes only safe pathways (public methods/properties)." },
+                    { id: "t7-q2", q: "How does a C# property primarily achieve encapsulation for a private field?", options: ["By making the field 'public' so it can be accessed directly.", "By providing controlled access through 'get' and 'set' accessors.", "By using a constructor to set the initial value.", "By creating a copy of the field for external use."], ans: 1, explanation: "Properties provide get/set accessors to control validation and manage reading/writing to private backing fields." },
+                    { id: "t7-q3", q: "What is the modern, concise C# syntax for creating a property with a default getter and setter?", code: "public string Name { get; set; }", options: ["A full property", "A method-based property", "An auto-implemented property", "A backing field"], ans: 2, explanation: "Auto-implemented properties let you write concise properties, leaving the compiler to manage the private backing field." },
+                    { id: "t7-q4", q: "What is the result of attempting to compile the following code?", code: "public class Book {\n    public string Title { get; }\n    public Book(string title) { Title = title; }\n}\n// In another class:\nBook myBook = new Book(\"A Great Novel\");\nmyBook.Title = \"An Even Better Novel\";", options: ["The code compiles and the title is changed.", "A runtime exception is thrown.", "A compile-time error occurs because the property is read-only.", "The title remains \"A Great Novel\"."], ans: 2, explanation: "Since Title lacks a set accessor, it is read-only and can only be assigned a value inside its containing class constructor." },
+                    { id: "t7-q5", q: "What is the output of the code that uses a property with custom logic in its 'set' accessor?", code: "public class Employee {\n    private string _name;\n    public string Name {\n        get { return _name; }\n        set { _name = \"Employee: \" + value; }\n    }\n}\n// In another class:\nEmployee emp = new Employee();\nemp.Name = \"Alice\";\nConsole.Write(emp.Name);", options: ["Alice", "value", "Employee: Alice", "An error occurs."], ans: 2, explanation: "The set accessor runs when emp.Name is assigned \"Alice\", prepending \"Employee: \". Output: 'Employee: Alice'." },
+                    { id: "t7-q6", q: "How can you define a property that is publicly readable but can only be changed from within its own class?", options: ["public string Data { get; private set; }", "private string Data { get; set; }", "public string Data { readonly get; set; }", "public readonly string Data { get; set; }"], ans: 0, explanation: "By placing a private modifier on the set accessor: `public string Data { get; private set; }`." },
+                    { id: "t7-q7", q: "Inside a property's 'set' accessor, what does the contextual keyword value represent?", options: ["The current value of the property's backing field.", "The value being assigned to the property from the calling code.", "The data type of the property (e.g., 'string', 'int').", "A null reference."], ans: 1, explanation: "The keyword 'value' is a contextual parameter containing the incoming value being assigned by the caller." },
+                    { id: "t7-q8", q: "What is a \"backing field\" in the context of a full property implementation?", options: ["A public variable that is an alias for the property.", "A private instance variable that holds the actual data for the property.", "A temporary variable used only inside the 'get' accessor.", "An automatically generated field created for an auto-property."], ans: 1, explanation: "A backing field is a private field used to store the underlying value exposed by a property." },
+                    { id: "t7-q9", q: "What will be the final value of account.Balance after this code runs?", code: "public class BankAccount {\n    private decimal _balance;\n    public decimal Balance {\n        get { return _balance; }\n        set { if (value >= 0) _balance = value; }\n    }\n}\n// In another class:\nBankAccount account = new BankAccount();\naccount.Balance = 100m;\naccount.Balance = -50m; // This is ignored", options: ["-50", "50", "0", "100"], ans: 3, explanation: "Because -50 fails the check (value >= 0), the assignment is ignored, keeping the balance at 100m." },
+                    { id: "t7-q10", q: "Which of the following is a primary benefit of using encapsulation?", options: ["It makes your program run faster.", "It allows you to change a class's internal implementation without breaking the code that uses it.", "It reduces the number of classes you need to write.", "It automatically prevents all runtime errors."], ans: 1, explanation: "Encapsulation isolates class details, allowing developers to change internal layouts without breaking external dependencies." }
+                ]
+            },
+            t8: {
+                title: "8. Inheritance",
+                color: "pink",
+                questions: [
+                    { id: "t8-q1", q: "In the declaration public class Dog : Animal, which statement is true?", options: ["Animal is the derived class and Dog is the base class.", "Dog is the derived class and inherits from the base class Animal.", "Dog is being declared as an alias for Animal.", "This syntax is invalid in C#."], ans: 1, explanation: "The colon indicates inheritance, meaning Dog is the subclass (derived) that inherits from the base class Animal." },
+                    { id: "t8-q2", q: "A member declared as protected in a base class is accessible from:", options: ["Only the base class itself.", "Anywhere in the program.", "The base class and any class that derives from it.", "Only other classes in the same assembly."], ans: 2, explanation: "Protected members are accessible within their class and any subclass deriving from it." },
+                    { id: "t8-q3", q: "What is the output of the following code, which demonstrates polymorphism?", code: "public class Animal { public virtual string Speak() { return \"Animal sound\"; } }\npublic class Cat : Animal { public override string Speak() { return \"Meow\"; } }\n// In another class:\nAnimal myPet = new Cat();\nConsole.Write(myPet.Speak());", options: ["Animal sound", "Meow", "A compile-time error.", "A runtime exception."], ans: 1, explanation: "With polymorphism, C# resolves the virtual method call at runtime based on the actual object type (Cat), yielding 'Meow'." },
+                    { id: "t8-q4", q: "Which statement about an abstract class is true?", options: ["You can create an instance of it using new.", "It cannot have a constructor.", "It is intended to be a base class and cannot be instantiated directly.", "All members of an abstract class must also be abstract."], ans: 2, explanation: "Abstract classes provide structural templates and cannot be instantiated directly." },
+                    { id: "t8-q5", q: "If a class inherits from an abstract class containing an abstract method, what must the derived class do?", code: "public abstract class Shape { public abstract void Draw(); }", options: ["It can choose to ignore the abstract method.", "It must provide an implementation for the abstract method using the override keyword.", "It must also be declared as abstract.", "It must hide the method using the new keyword."], ans: 1, explanation: "A concrete derived class must override and implement all inherited abstract methods." },
+                    { id: "t8-q6", q: "What is the purpose of the base keyword in an overridden method?", code: "public class Derived : Base {\n    public override void DoWork() { base.DoWork(); }\n}", options: ["It creates a new instance of the base class.", "It calls the base class's implementation of the current method.", "It prevents the method from being overridden further.", "It converts the derived class to its base type."], ans: 1, explanation: "The 'base' keyword allows derived classes to call virtual/override methods defined in the parent class." },
+                    { id: "t8-q7", q: "What is the effect of the sealed keyword when applied to a class?", options: ["It prevents the class from being instantiated.", "It marks the class as abstract.", "It prevents other classes from inheriting from it.", "It makes all of its members private by default."], ans: 2, explanation: "Sealed classes cannot be inherited, protecting their implementation from being modified." },
+                    { id: "t8-q8", q: "What is the primary difference between overriding a method (using virtual/override) and hiding it (using new)?", options: ["There is no difference; they are interchangeable.", "Hiding is for value types, while overriding is for reference types.", "Overriding provides polymorphic behavior, while hiding does not.", "Overriding requires the base keyword, while hiding does not."], ans: 2, explanation: "Overriding enables dynamic polymorphic lookup. Method hiding masks base methods statically depending on the reference type." },
+                    { id: "t8-q9", q: "In a derived class constructor, how do you call a specific constructor from its base class?", options: ["By using new BaseClass() inside the constructor.", "By using base(arguments) after the derived constructor's signature.", "It is called automatically and cannot be controlled.", "By using this(arguments)."], ans: 1, explanation: "Use the base initializer list syntax: `public Derived() : base(args)`." },
+                    { id: "t8-q10", q: "What is the result of attempting to compile this code?", code: "public abstract class Vehicle {\n    public abstract virtual void StartEngine();\n}", options: ["It compiles successfully.", "A compile-time error; a method cannot be both 'abstract' and 'virtual'.", "A compile-time error; an abstract method must be 'private'.", "A runtime error occurs when the method is called."], ans: 1, explanation: "Because abstract methods are implicitly virtual, declaring both together causes a compile-time error." }
+                ]
+            },
+            t9: {
+                title: "9. WinForms",
+                color: "orange",
+                questions: [
+                    { id: "t9-q1", q: "Which event is most commonly handled to perform an action when a Button is clicked?", options: ["The Load event", "The Paint event", "The Click event", "The TextChanged event"], ans: 2, explanation: "The Click event is standard for intercepting user interactions on a Button." },
+                    { id: "t9-q2", q: "Which property of a TextBox control do you use to get or set the text it contains?", options: ["Value", "String", "Caption", "Text"], ans: 3, explanation: "The Text property holds the string contents displayed inside the TextBox control." },
+                    { id: "t9-q3", q: "To display static, non-editable text on a form, which control is the most appropriate choice?", options: ["Label", "TextBox", "Panel", "RichTextBox"], ans: 0, explanation: "Labels are used to present read-only captions or text labels." },
+                    { id: "t9-q4", q: "Which line of code correctly adds a new string \"Apple\" to a ComboBox named fruitComboBox?", options: ["fruitComboBox.AddItem(\"Apple\");", "fruitComboBox.Text = \"Apple\";", "fruitComboBox.Items.Add(\"Apple\");", "fruitComboBox.Source.Add(\"Apple\");"], ans: 2, explanation: "Items inside a ComboBox are managed via the Items list: `fruitComboBox.Items.Add(\"Apple\")`." },
+                    { id: "t9-q5", q: "To perform custom drawing on a Panel control, which event should you handle?", options: ["The Click event", "The Paint event", "The Load event", "The VisibleChanged event"], ans: 1, explanation: "The Paint event is triggered when the operating system requests redrawing a control surface." },
+                    { id: "t9-q6", q: "Inside a Paint event handler, how do you typically obtain the Graphics object used for drawing?", code: "private void myPanel_Paint(object sender, PaintEventArgs e) {\n    // How to get the Graphics object?\n}", options: ["By creating a new one: Graphics g = new Graphics();", "From the event arguments: Graphics g = e.Graphics;", "From the panel directly: Graphics g = myPanel.Graphics;", "By casting the sender: Graphics g = (Graphics)sender;"], ans: 1, explanation: "The PaintEventArgs argument 'e' exposes the Graphics object ('e.Graphics') used to paint on the control." },
+                    { id: "t9-q7", q: "To draw the outline of a shape you use a Pen. To fill the inside of a shape with a solid color, you should use a:", options: ["FillPen", "SolidBrush", "Color", "Texture"], ans: 1, explanation: "Pens draw lines and outlines, while Brushes (like SolidBrush) fill closed areas." },
+                    { id: "t9-q8", q: "Which method call on a Graphics object g correctly draws a solid blue rectangle?", options: ["g.DrawRectangle(Pens.Blue, 10, 20, 30, 40);", "g.Paint(Brushes.Blue, 10, 20, 30, 40);", "g.FillRectangle(Brushes.Blue, 10, 20, 30, 40);", "g.Fill(Pens.Blue, 10, 20, 30, 40);"], ans: 2, explanation: "The FillRectangle method fills a rectangle's interior using a Brush. DrawRectangle only outlines it using a Pen." },
+                    { id: "t9-q9", q: "Besides providing a surface for custom drawing, what is another primary function of a Panel control?", options: ["To get text input from the user.", "To serve as a container for grouping and organizing other controls.", "To display a drop-down list of items.", "To display an image from a file."], ans: 1, explanation: "Panels act as visual container frames to group and manage elements collectively." },
+                    { id: "t9-q10", q: "After a user makes a selection in a ComboBox, which property is best used to retrieve the actual selected object?", options: ["Text", "SelectedIndex", "SelectedItem", "SelectedValue"], ans: 2, explanation: "SelectedItem retrieves the actual selected object, while SelectedIndex returns its position in the list." }
+                ]
+            },
+            t10: {
+                title: "10. Collections",
+                color: "red",
+                questions: [
+                    { id: "t10-q1", q: "What is the output of the following code?", code: "int[] numbers = { 5, 12, 4, 21, 9 };\nint result = numbers[0];\nforeach (int num in numbers)\n{\n    if (num > result) result = num;\n}\nConsole.Write(result);", options: ["5", "12", "9", "21"], ans: 3, explanation: "This loop finds the maximum value in the array. The maximum value in the array is 21." },
+                    { id: "t10-q2", q: "What is the output of the following code snippet?", code: "List<int> values = new List<int> { 10, 5, 15, 20 };\nint total = 0;\nforeach (int v in values) { total += v; }\nConsole.Write(total);", options: ["15", "50", "20", "4"], ans: 1, explanation: "The foreach loop sums all elements of the List<int>: 10 + 5 + 15 + 20 = 50." },
+                    { id: "t10-q3", q: "What is the output of this code?", code: "int[] scores = { 98, 85, 77, 92, 81 };\nint result = 100;\nforeach (int score in scores)\n{\n    if (score < result) result = score;\n}\nConsole.Write(result);", options: ["98", "100", "77", "81"], ans: 2, explanation: "This loop finds the minimum value in the array. The minimum value in the array is 77." },
+                    { id: "t10-q4", q: "What is the output of this code?", code: "double[] prices = { 2.50, 4.50, 5.00 };\ndouble total = 0;\nfor (int i = 0; i < prices.Length; i++) { total += prices[i]; }\ndouble result = total / prices.Length;\nConsole.Write(result);", options: ["12.0", "3.0", "4.0", "5.0"], ans: 2, explanation: "The sum of the array is 12.0. Dividing by Length (3) yields the average: 4.0." },
+                    { id: "t10-q5", q: "What is the output of the following code?", code: "List<int> data = new List<int> { 10, 40, 65, 80, 95, 50 };\nint counter = 0;\nforeach (int item in data)\n{\n    if (item > 50) counter++;\n}\nConsole.Write(counter);", options: ["2", "3", "4", "6"], ans: 1, explanation: "The loop counts elements strictly greater than 50 (65, 80, 95), which is 3 elements." },
+                    { id: "t10-q6", q: "What is the potential issue with the final calculation in this code?", code: "int[] scores = { 8, 9, 9 }; // Sum is 26\nint sum = 0;\nforeach (int s in scores) { sum += s; }\nint average = sum / scores.Length; // 26/3", options: ["A foreach loop cannot be used with an array.", "The sum variable should be a double.", "Integer division truncates the fractional part of the result.", "scores.Length will be incorrect."], ans: 2, explanation: "Dividing two integers performs integer division, which truncates the fractional part (26 / 3 = 8)." },
+                    { id: "t10-q7", q: "What is the output of the following code?", code: "int[] numbers = { 1, 2, 3, 4, 5, 6 };\nint total = 0;\nforeach (int n in numbers)\n{\n    if (n % 2 == 0) total += n;\n}\nConsole.Write(total);", options: ["21", "9", "12", "15"], ans: 2, explanation: "The loop sums the even numbers: 2 + 4 + 6 = 12." },
+                    { id: "t10-q8", q: "What is the output of this code?", code: "int[] data = { 5, 10, 15, 20, 25 };\nint index = -1;\nfor (int i = 0; i < data.Length; i++)\n{\n    if (data[i] == 20) { index = i; break; }\n}\nConsole.Write(index);", options: ["20", "3", "4", "-1"], ans: 1, explanation: "This loop finds the index of the value 20. 20 is at index 3." },
+                    { id: "t10-q9", q: "What is the output of the following code?", code: "string[] fruits = { \"Apple\", \"Banana\", \"Cherry\" };\nstring result = \"Not Found\";\nforeach (string fruit in fruits)\n{\n    if (fruit == \"Banana\") { result = \"Found\"; break; }\n}\nConsole.Write(result);", options: ["Found", "Not Found", "Banana", "An exception is thrown."], ans: 0, explanation: "The loop searches for \"Banana\". Since it is present, result becomes \"Found\" and the loop breaks." },
+                    { id: "t10-q10", q: "What is the output of this code?", code: "List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6 };\nList<int> evenNumbers = new List<int>();\nforeach (int num in numbers)\n{\n    if (num % 2 == 0) evenNumbers.Add(num);\n}\nConsole.Write(evenNumbers.Count);", options: ["6", "12", "3", "4"], ans: 2, explanation: "The loop filters even numbers (2, 4, 6) into a new list. Count is 3." }
+                ]
+            }
+        };
+
+        // Complete coverage of all written assignments from the PDF
+        const theoryData = {
+            t1: [
+                { q: "1. When you use Console.ReadLine() to get input, what is the returned data type? What must you do if you need it as an int?", sol: "Console.ReadLine() always returns a 'string'. To use it as an int, you must convert it using parsing functions like Convert.ToInt32(), int.Parse(), or safely with int.TryParse()." },
+                { q: "2. Compare and Contrast: What is the functional difference between Console.Write() and Console.WriteLine()?", sol: "Console.Write() prints output on the same line without moving the cursor. Console.WriteLine() prints output followed by a newline, moving the cursor to the next line." },
+                { q: "3. Write a C# snippet that gets user size and uses nested loops to print a hollow square of asterisks (*).", sol: "int size = int.Parse(Console.ReadLine());\nfor (int i = 1; i <= size; i++) {\n    for (int j = 1; j <= size; j++) {\n        if (i == 1 || i == size || j == 1 || j == size) {\n            Console.Write(\"*\");\n        } else {\n            Console.Write(\" \");\n        }\n    }\n    Console.WriteLine();\n}" }
+            ],
+            t2: [
+                { q: "1. What is the difference between the assignment operator (=) and the equality comparison operator (==)?", sol: "The '=' operator assigns values to variables. The '==' operator checks if two values are equal, returning a boolean." },
+                { q: "2. Rewrite: if (temperature > 20) { weather = \"Warm\"; } else { weather = \"Cool\"; } as a single line ternary operator.", sol: "string weather = temperature > 20 ? \"Warm\" : \"Cool\";" },
+                { q: "3. Write GetLetterGrade(int score) and explain why the order of if-else if conditions is crucial.", sol: "public char GetLetterGrade(int score) {\n    if (score >= 90) return 'A';\n    else if (score >= 80) return 'B';\n    else if (score >= 70) return 'C';\n    else if (score >= 60) return 'D';\n    else return 'F';\n}\n\nExplanation: Order is crucial because evaluations exit on first match. If you checked 'score >= 60' first, a score of 95 would match 'D' incorrectly." }
+            ],
+            t3: [
+                { q: "1. What is the difference between a while loop and a do-while loop regarding execution?", sol: "A while loop evaluates the condition first (meaning it may run 0 times). A do-while loop executes the body first, ensuring it runs at least once." },
+                { q: "2. Can you assign a new value to the iteration variable in a foreach loop? Why or why not?", sol: "No. The iteration variable is read-only. Attempting to assign to it causes a compile-time error." },
+                { q: "3. Write nested loops to print a right-angled triangle pattern of asterisks (*) of height 5. Explain inner vs outer roles.", sol: "for (int i = 1; i <= 5; i++) {\n    for (int j = 1; j <= i; j++) {\n        Console.Write(\"*\");\n    }\n    Console.WriteLine();\n}\n\nExplanation: The outer loop controls rows (vertical space). The inner loop controls columns (printing asterisks horizontally)." }
+            ],
+            t4: [
+                { q: "1. If a C# array has a Length of 7, what is the index of its last element? Why?", sol: "The index of the last element is 6. This is because arrays are 0-indexed, meaning indices span from 0 to Length - 1." },
+                { q: "2. Compare and contrast C# Array vs List<T> (fixed vs dynamic, performance).", sol: "Arrays have a fixed size upon creation, with minimal memory overhead. Lists are dynamic, resizing automatically, but with slightly more performance overhead." },
+                { q: "3. Write FindIndex(string[] words, string target) that returns the target's index or -1 if not found. Why is -1 effective?", sol: "public int FindIndex(string[] words, string target) {\n    for (int i = 0; i < words.Length; i++) {\n        if (words[i] == target) return i;\n    }\n    return -1;\n}\n\nExplanation: -1 is not a valid array index, making it a clear, unambiguous signal that the element was not found." }
+            ],
+            t5: [
+                { q: "1. What is the difference between a class and an object in object-oriented programming?", sol: "A class is a blueprint/template outlining properties and behaviors. An object is a concrete instance of that class created in memory." },
+                { q: "2. What does the private access modifier do to a field within a class?", sol: "It restricts accessibility of that field to within the class itself, preventing external classes from modifying it." },
+                { q: "3. Define a Student class with name and id fields, constructor, and DisplayInfo(). Show instance creation.", sol: "public class Student {\n    private string _name;\n    private int _studentId;\n    public Student(string name, int id) {\n        _name = name; _studentId = id;\n    }\n    public void DisplayInfo() {\n        Console.WriteLine($\"Student: {_name}, ID: {_studentId}\");\n    }\n}\n// Creation:\nStudent s = new Student(\"Alice\", 101);\ns.DisplayInfo();" }
+            ],
+            t6: [
+                { q: "1. When a value type is passed to a method by value, is the original variable affected? Why or why not?", sol: "No, a copy of the value is passed, leaving the original variable unchanged." },
+                { q: "2. Compare and contrast ref and out keywords (initialization and assignment).", sol: "ref parameters must be initialized before passing, and modifying them inside the method is optional. out parameters do not require pre-initialization, but they must be assigned a value inside the method before it returns." },
+                { q: "3. Write Swap(ref int a, ref int b). Explain why ref is essential.", sol: "public void Swap(ref int a, ref int b) {\n    int temp = a;\n    a = b;\n    b = temp;\n}\n\nExplanation: 'ref' passes references instead of value copies, allowing the method to modify the original variables directly." }
+            ],
+            t7: [
+                { q: "1. In object-oriented programming, what is the primary goal of encapsulation?", sol: "To bundle data and methods together, while hiding internal state details to protect the object's integrity." },
+                { q: "2. What is a backing field in the context of C# properties?", sol: "A backing field is a private variable that holds the actual data exposed by a public property's get/set accessors." },
+                { q: "3. Write Temperature class with validation in Celsius property so it cannot be set below -273.15 C.", sol: "public class Temperature {\n    private double _celsius;\n    public double Celsius {\n        get { return _celsius; }\n        set { if (value >= -273.15) _celsius = value; }\n    }\n}" }
+            ],
+            t8: [
+                { q: "1. What does the protected modifier allow? How does it differ from private?", sol: "A protected member is accessible inside its class and any derived subclasses. Private members are only accessible inside the class they are declared in." },
+                { q: "2. What is the purpose of the sealed keyword on a class?", sol: "It prevents other classes from inheriting from it." },
+                { q: "3. Write base Shape with virtual GetArea(), Rectangle and Circle overrides. Explain runtime polymorphic resolution.", sol: "public class Shape { public virtual double GetArea() => 0; }\npublic class Rectangle : Shape {\n    public double Width { get; set; } public double Height { get; set; }\n    public override double GetArea() => Width * Height;\n}\npublic class Circle : Shape {\n    public double Radius { get; set; }\n    public override double GetArea() => Math.PI * Radius * Radius;\n}\n\nExplanation: When iterating a List<Shape>, the CLR inspects the actual object type on the heap and invokes its specific overridden GetArea() method." }
+            ],
+            t9: [
+                { q: "1. When using a Graphics object, what is the difference between a Pen and a Brush?", sol: "A Pen is used to draw lines and outlines of shapes. A Brush is used to fill the interior of closed shapes." },
+                { q: "2. Describe Paint event custom drawing. How do you get the Graphics object?", sol: "The Paint event fires when a control needs to redraw itself. You obtain the Graphics object inside the event handler via PaintEventArgs 'e' using `Graphics g = e.Graphics;`." },
+                { q: "3. Write Paint handler that draws solid red circle (diameter 100px) in top-left corner.", sol: "private void panel_Paint(object sender, PaintEventArgs e) {\n    Graphics g = e.Graphics;\n    using (SolidBrush brush = new SolidBrush(Color.Red)) {\n        g.FillEllipse(brush, 0, 0, 100, 100);\n    }\n}" }
+            ],
+            t10: [
+                { q: "1. What is the difference between Array and List<T> in terms of size management?", sol: "An array's size is fixed upon instantiation and cannot be changed. A List<T> is dynamic, resizing its internal buffer automatically as items are added or removed." },
+                { q: "2. Write a C# method that reverses an integer array in-place without creating a second array.", sol: "public void ReverseArray(int[] arr) {\n    int start = 0, end = arr.Length - 1;\n    while (start < end) {\n        int temp = arr[start];\n        arr[start] = arr[end];\n        arr[end] = temp;\n        start++; end--;\n    }\n}" },
+                { q: "3. Write GetPositiveNumbers(List<int> inputList) filtering positive numbers.", sol: "public List<int> GetPositiveNumbers(List<int> inputList) {\n    List<int> positives = new List<int>();\n    foreach (int num in inputList) {\n        if (num > 0) positives.Add(num);\n    }\n    return positives;\n}" }
+            ]
+        };
+
+        // Application State
+        let currentMode = 'mcq';
+        let currentTab = 't1';
+        let currentQuestionIdx = 0;
+        let filterBookmarked = false;
+
+        // Local Storage Bindings
+        let savedAnswers = {};
+        let bookmarkedQuestions = {};
+        let theoryAnswers = {};
+
+        // App Initialization
+        window.onload = function() {
+            loadProgress();
+            renderTabs();
+            renderMatrix();
+            loadSandboxSnippet();
+            setQuizMode('mcq');
+        };
+
+        // Theme Toggle (Now toggles both body and html tag to let standard Tailwind dark: tags function properly)
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            document.documentElement.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            if (document.body.classList.contains('dark-theme')) {
+                icon.className = "fa-solid fa-sun text-yellow-400";
+            } else {
+                icon.className = "fa-solid fa-moon text-indigo-600";
+            }
         }
 
-        function getResultsHtml() {
-            const score = calculateScore();
-            const percentage = Math.round((score / quizData.length) * 100);
+        // Quiz Mode Selection
+        function setQuizMode(mode) {
+            currentMode = mode;
+            const mcqBtn = document.getElementById('mode-mcq-btn');
+            const theoryBtn = document.getElementById('mode-theory-btn');
+            const mcqPanel = document.getElementById('mcq-panel');
+            const theoryPanel = document.getElementById('theory-panel');
 
-            let reviewHtml = '';
-            quizData.forEach((question, qIndex) => {
-                const userAnswerIndex = selectedAnswers[qIndex];
-                const isUserCorrect = userAnswerIndex !== undefined && question.answerOptions[userAnswerIndex].isCorrect;
+            if (mode === 'mcq') {
+                mcqBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400";
+                theoryBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 transition hover:text-indigo-500";
+                mcqPanel.classList.remove('hidden');
+                theoryPanel.classList.add('hidden');
+                renderTabs();
+                renderMCQ();
+            } else {
+                theoryBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400";
+                mcqBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 transition hover:text-indigo-500";
+                mcqPanel.classList.add('hidden');
+                theoryPanel.classList.remove('hidden');
+                renderTheoryTabs();
+                renderTheoryWorkbook();
+            }
+        }
+
+        // Navigation Tabs for MCQ Mode
+        function renderTabs() {
+            const container = document.querySelector('#mcq-panel div:first-child');
+            if (!container) return;
+
+            container.innerHTML = Object.keys(tutorialsData).map(key => {
+                const topic = tutorialsData[key];
+                const isActive = currentTab === key;
+                const answered = topic.questions.filter(q => savedAnswers[q.id] !== undefined).length;
                 
-                let optionsHtml = '';
-                question.answerOptions.forEach((opt, oIndex) => {
-                    let bgColor = "bg-gray-50 text-gray-700";
-                    let borderColor = "border-gray-200";
-                    let iconHtml = "";
-                    
-                    if (opt.isCorrect) {
-                        bgColor = "bg-green-100 text-green-800";
-                        borderColor = "border-green-400";
-                        iconHtml = `<span class="ml-2 text-green-600 font-bold">✓ Correct</span>`;
-                    } else if (userAnswerIndex === oIndex && !opt.isCorrect) {
-                        bgColor = "bg-red-100 text-red-800";
-                        borderColor = "border-red-400";
-                        iconHtml = `<span class="ml-2 text-red-600 font-bold">✗ Your Answer</span>`;
-                    }
+                const tabStyle = isActive 
+                    ? `bg-indigo-600 text-white shadow-md font-bold` 
+                    : `bg-slate-100 hover:bg-slate-200 text-slate-750 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700`;
 
-                    optionsHtml += `
-                        <div class="p-4 rounded-lg border ${bgColor} ${borderColor} flex items-start">
-                            <div class="flex-1">${opt.text}</div>
-                            ${iconHtml}
+                return `
+                    <button onclick="switchTab('${key}')" class="px-3.5 py-1.5 whitespace-nowrap text-xs rounded-xl transition ${tabStyle} flex items-center gap-1.5">
+                        <span>${topic.title}</span>
+                        ${answered > 0 ? `<span class="bg-indigo-900/40 text-[9px] px-1.5 py-0.5 rounded-full">${answered}/10</span>` : ''}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function switchTab(key) {
+            currentTab = key;
+            currentQuestionIdx = 0;
+            renderTabs();
+            renderMCQ();
+            renderMatrix();
+        }
+
+        // Render Active MCQ Card
+        function renderMCQ() {
+            const qList = getFilteredQuestions();
+            const holder = document.getElementById('question-holder');
+            const pageDots = document.getElementById('question-page-dots');
+            const indexLabel = document.getElementById('question-index-label');
+
+            if (qList.length === 0) {
+                holder.innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 bg-card text-center">
+                        <i class="fa-solid fa-bookmark text-4xl text-slate-300 mb-2"></i>
+                        <p class="text-sm font-bold text-slate-550">No bookmarked questions in this topic.</p>
+                        <p class="text-xs text-slate-400 mt-1">Bookmark questions using the icon inside question cards to review them later!</p>
+                    </div>
+                `;
+                pageDots.innerHTML = '';
+                indexLabel.innerText = "0 of 0";
+                return;
+            }
+
+            if (currentQuestionIdx >= qList.length) {
+                currentQuestionIdx = qList.length - 1;
+            }
+            if (currentQuestionIdx < 0) currentQuestionIdx = 0;
+
+            const qObj = qList[currentQuestionIdx];
+            const isFlagged = bookmarkedQuestions[qObj.id] || false;
+            const chosenAnswer = savedAnswers[qObj.id];
+            const isAnswered = chosenAnswer !== undefined;
+
+            indexLabel.innerText = `Question ${currentQuestionIdx + 1} of ${qList.length}`;
+
+            // Render navigation dots
+            pageDots.innerHTML = qList.map((q, idx) => {
+                const dotColor = idx === currentQuestionIdx 
+                    ? 'bg-indigo-600 ring-2 ring-indigo-300' 
+                    : (savedAnswers[q.id] !== undefined ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700');
+                return `<span class="w-2 h-2 rounded-full ${dotColor}"></span>`;
+            }).join('');
+
+            holder.innerHTML = `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 bg-card transition-all">
+                    <div class="flex justify-between items-start gap-4 mb-4">
+                        <div>
+                            <span class="text-xs font-mono font-bold text-indigo-500 uppercase">Question ${qObj.id}</span>
+                            <h3 class="text-base font-bold text-slate-850 dark:text-slate-100 mt-1">${qObj.q}</h3>
+                        </div>
+                        <button onclick="toggleBookmark('${qObj.id}')" class="text-xl text-amber-500 hover:scale-110 transition shrink-0">
+                            <i class="${isFlagged ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+                        </button>
+                    </div>
+
+                    ${qObj.code ? `
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-900 overflow-x-auto mb-6">
+                            <pre class="code-font text-xs text-slate-200">${escapeHTML(qObj.code)}</pre>
+                        </div>
+                    ` : ''}
+
+                    <div class="grid grid-cols-1 gap-3">
+                        ${qObj.options.map((option, optIdx) => {
+                            let cardStyle = "border-slate-200 bg-slate-50 hover:bg-slate-100 dark:bg-slate-855 dark:border-slate-700 dark:hover:bg-slate-700";
+                            let icon = `<span class="w-5 h-5 flex items-center justify-center rounded-full border border-slate-300 dark:border-slate-605 text-xs font-bold mr-3">${String.fromCharCode(65 + optIdx)}</span>`;
+                            
+                            if (isAnswered) {
+                                if (optIdx === qObj.ans) {
+                                    cardStyle = "correct-bg font-semibold";
+                                    icon = `<i class="fa-solid fa-circle-check text-emerald-500 mr-3 text-lg"></i>`;
+                                } else if (optIdx === chosenAnswer) {
+                                    cardStyle = "incorrect-bg";
+                                    icon = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-3 text-lg"></i>`;
+                                } else {
+                                    cardStyle = "border-slate-100 opacity-60 dark:border-slate-800";
+                                }
+                            }
+
+                            return `
+                                <button onclick="answerQuestion('${qObj.id}', ${optIdx})" ${isAnswered ? 'disabled' : ''} 
+                                        class="flex items-center text-left p-4 rounded-xl border-2 transition-all duration-150 ${cardStyle}">
+                                    ${icon}
+                                    <span class="text-sm font-medium leading-relaxed">${escapeHTML(option)}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    ${isAnswered ? `
+                        <div class="mt-6 p-4 bg-indigo-50 dark:bg-slate-800/60 rounded-xl border border-indigo-100 dark:border-slate-750 text-sm">
+                            <h4 class="font-bold text-indigo-950 dark:text-indigo-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-info-circle"></i> Diagnostic Summary
+                            </h4>
+                            <p class="text-xs text-indigo-700 dark:text-slate-300 mt-1 leading-relaxed">${qObj.explanation}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('prev-btn').disabled = currentQuestionIdx === 0;
+            document.getElementById('next-btn').disabled = currentQuestionIdx === qList.length - 1;
+        }
+
+        // Jump Selector Modal
+        function toggleGridSelector() {
+            const s = document.getElementById('grid-selector');
+            s.classList.toggle('hidden');
+            if (!s.classList.contains('hidden')) {
+                const nodes = document.getElementById('grid-selector-nodes');
+                const qList = getFilteredQuestions();
+                nodes.innerHTML = qList.map((q, idx) => {
+                    const isAnswered = savedAnswers[q.id] !== undefined;
+                    const bg = idx === currentQuestionIdx 
+                        ? 'bg-indigo-600 text-white font-bold' 
+                        : (isAnswered ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800');
+                    return `<button onclick="jumpToQuestion(${idx})" class="w-7 h-7 rounded-lg text-xs ${bg}">${idx + 1}</button>`;
+                }).join('');
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            currentQuestionIdx = idx;
+            document.getElementById('grid-selector').classList.add('hidden');
+            renderMCQ();
+        }
+
+        function getFilteredQuestions() {
+            const list = tutorialsData[currentTab].questions;
+            return filterBookmarked ? list.filter(q => bookmarkedQuestions[q.id]) : list;
+        }
+
+        function toggleBookmark(qId) {
+            bookmarkedQuestions[qId] = !bookmarkedQuestions[qId];
+            saveProgress();
+            renderMCQ();
+            updateDashboardMetrics();
+        }
+
+        function toggleBookmarkFilter() {
+            filterBookmarked = !filterBookmarked;
+            currentQuestionIdx = 0;
+            const btn = document.getElementById('bookmark-filter-btn');
+            if (filterBookmarked) {
+                btn.className = "px-3 py-1.5 rounded-xl border border-amber-500 bg-amber-50 text-amber-700 text-xs font-bold flex items-center gap-1.5 hover:bg-amber-100";
+            } else {
+                btn.className = "px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1.5 hover:bg-slate-50 dark:border-slate-800";
+            }
+            renderMCQ();
+        }
+
+        function nextQuestion() {
+            const qList = getFilteredQuestions();
+            if (currentQuestionIdx < qList.length - 1) {
+                currentQuestionIdx++;
+                renderMCQ();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIdx > 0) {
+                currentQuestionIdx--;
+                renderMCQ();
+            }
+        }
+
+        function answerQuestion(qId, selectedIdx) {
+            savedAnswers[qId] = selectedIdx;
+            saveProgress();
+            renderMCQ();
+            renderMatrix();
+            updateDashboardMetrics();
+        }
+
+        // Theory Workbook Setup
+        function renderTheoryTabs() {
+            const tabs = document.getElementById('theory-tabs');
+            tabs.innerHTML = Object.keys(tutorialsData).map(key => {
+                const isActive = currentTab === key;
+                const tabStyle = isActive 
+                    ? `bg-slate-900 text-white shadow font-semibold dark:bg-slate-700` 
+                    : `bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300`;
+                return `
+                    <button onclick="switchTheoryTab('${key}')" class="px-3 py-1.5 text-xs rounded-xl transition whitespace-nowrap ${tabStyle}">
+                        ${tutorialsData[key].title}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function switchTheoryTab(key) {
+            currentTab = key;
+            renderTheoryTabs();
+            renderTheoryWorkbook();
+        }
+
+        function renderTheoryWorkbook() {
+            const container = document.getElementById('theory-workbook-holder');
+            const questions = theoryData[currentTab] || [];
+
+            container.innerHTML = questions.map((item, idx) => {
+                const id = `${currentTab}-theory-${idx}`;
+                const saved = theoryAnswers[id] || "";
+
+                return `
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 bg-card">
+                        <span class="text-xs font-mono font-bold text-indigo-500">CURRICULUM WRITTEN EXAM</span>
+                        <h4 class="font-bold text-slate-800 dark:text-slate-200 mt-1 leading-relaxed">${item.q}</h4>
+                        
+                        <div class="mt-4">
+                            <textarea id="${id}" oninput="saveTheoryValue('${id}')" 
+                                      placeholder="Type your structure implementation, code loops, or comparison summaries here..."
+                                      class="w-full h-32 p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 dark:focus:bg-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition-all font-mono">${saved}</textarea>
+                        </div>
+
+                        <div class="mt-4">
+                            <details class="group border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden">
+                                <summary class="bg-slate-100 dark:bg-slate-800 p-3 text-xs font-semibold cursor-pointer select-none text-slate-750 dark:text-slate-200 flex items-center justify-between">
+                                    <span><i class="fa-solid fa-shield-halved mr-1.5 text-indigo-500"></i> Unlock C# Solution & Rubric Match</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] group-open:rotate-180 transition"></i>
+                                </summary>
+                                <div class="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                                    <pre class="code-font text-xs text-slate-300 bg-slate-950 p-4 rounded-xl overflow-x-auto whitespace-pre-wrap leading-relaxed">${escapeHTML(item.sol)}</pre>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function saveTheoryValue(id) {
+            theoryAnswers[id] = document.getElementById(id).value;
+            saveProgress();
+        }
+
+        // Diagnostics Checklist Matrix
+        function renderMatrix() {
+            const matrix = document.getElementById('diagnostic-matrix');
+            matrix.innerHTML = Object.keys(tutorialsData).map(key => {
+                const topic = tutorialsData[key];
+                const answered = topic.questions.filter(q => savedAnswers[q.id] !== undefined).length;
+                const correct = topic.questions.filter(q => savedAnswers[q.id] === q.ans).length;
+                
+                let barColor = "bg-indigo-500";
+                if (answered === 10) {
+                    barColor = correct >= 8 ? "bg-emerald-500" : "bg-amber-500";
+                }
+
+                return `
+                    <div class="flex items-center justify-between text-xs py-1.5 border-b border-slate-100 dark:border-slate-850">
+                        <span class="font-medium text-slate-650 dark:text-slate-300 truncate max-w-[150px]">${topic.title}</span>
+                        <div class="flex items-center space-x-2 shrink-0">
+                            <span class="font-mono text-slate-400 font-bold">${correct}/10</span>
+                            <div class="w-16 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
+                                <div class="h-1.5 rounded-full ${barColor}" style="width: ${answered * 10}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Overall Dashboard Progress
+        function updateDashboardMetrics() {
+            const total = 100;
+            let answered = 0;
+            let correct = 0;
+
+            Object.keys(tutorialsData).forEach(key => {
+                tutorialsData[key].questions.forEach(q => {
+                    const ans = savedAnswers[q.id];
+                    if (ans !== undefined) {
+                        answered++;
+                        if (ans === q.ans) correct++;
+                    }
+                });
+            });
+
+            document.getElementById('score-text').innerText = `${correct} / ${total}`;
+            const bookmarkCount = Object.keys(bookmarkedQuestions).filter(k => bookmarkedQuestions[k]).length;
+            document.getElementById('flagged-count').innerText = bookmarkCount;
+
+            const percentage = Math.round((answered / total) * 100);
+            document.getElementById('progress-percent').innerText = `${percentage}%`;
+            document.getElementById('progress-desc').innerText = `${answered} of ${total} Answered`;
+        }
+
+        // C# CLI Sandbox Code Simulators
+        const sandboxSnippets = {
+            swap: {
+                inputs: [
+                    { label: "Int a:", id: "val-a", type: "number", default: 5 },
+                    { label: "Int b:", id: "val-b", type: "number", default: 12 },
+                    { label: "Parameter passing modifier:", id: "modifier", type: "select", options: ["ref", "Value Copy"] }
+                ],
+                simulate: function() {
+                    const a = parseInt(document.getElementById('val-a').value) || 0;
+                    const b = parseInt(document.getElementById('val-b').value) || 0;
+                    const mod = document.getElementById('modifier').value;
+
+                    let s = `int x = ${a};\nint y = ${b};\n`;
+                    s += `Swap(${mod === 'ref' ? 'ref x, ref y' : 'x, y'});\n\n`;
+                    s += `[Simulating Method Frame Call...]\n`;
+                    s += `void Swap(${mod === 'ref' ? 'ref int param1, ref int param2' : 'int param1, int param2'}) {\n`;
+                    s += `    int temp = param1; // temp = ${a}\n`;
+                    s += `    param1 = param2;    // param1 = ${b}\n`;
+                    s += `    param2 = temp;      // param2 = ${a}\n`;
+                    s += `}\n\n`;
+                    s += `[Console Out Results]:\n`;
+                    s += `Value of x (a): ${mod === 'ref' ? b : a}\n`;
+                    s += `Value of y (b): ${mod === 'ref' ? a : b}`;
+                    return s;
+                }
+            },
+            ternary: {
+                inputs: [
+                    { label: "Temperature Value (°C):", id: "temp-in", type: "number", default: 22 },
+                    { label: "Threshold boundary limit:", id: "thresh-in", type: "number", default: 15 }
+                ],
+                simulate: function() {
+                    const temp = parseInt(document.getElementById('temp-in').value) || 0;
+                    const thresh = parseInt(document.getElementById('thresh-in').value) || 0;
+                    const check = temp > thresh;
+                    
+                    let s = `int temp = ${temp};\n`;
+                    s += `string weather = temp > ${thresh} ? "Warm" : "Cold";\n\n`;
+                    s += `[Resolution]: Evaluated condition (${temp} > ${thresh}) => ${check ? 'TRUE' : 'FALSE'}\n`;
+                    s += `[Console Out Results]:\n`;
+                    s += `weather evaluates to: "${check ? 'Warm' : 'Cold'}"`;
+                    return s;
+                }
+            },
+            formatting: {
+                inputs: [
+                    { label: "Float Input Value:", id: "float-in", type: "number", default: 19.99 },
+                    { label: "Format specifier:", id: "fmt-code", type: "select", options: ["Currency (:C)", "Fixed-Point (:F2)"] }
+                ],
+                simulate: function() {
+                    const num = parseFloat(document.getElementById('float-in').value) || 0.0;
+                    const fmt = document.getElementById('fmt-code').value;
+
+                    let formatted = fmt.includes("Currency") ? `$${num.toFixed(2)}` : num.toFixed(2);
+                    let s = `double price = ${num};\n`;
+                    s += `Console.WriteLine($"Price is {price:${fmt.includes("Currency") ? 'C' : 'F2'}}");\n\n`;
+                    s += `[Console Out Results]:\n`;
+                    s += `Price is: ${formatted}`;
+                    return s;
+                }
+            },
+            polymorphism: {
+                inputs: [
+                    { label: "Instantiated derived subtype:", id: "poly-type", type: "select", options: ["Cat", "Animal (Base)"] }
+                ],
+                simulate: function() {
+                    const type = document.getElementById('poly-type').value;
+
+                    let s = `Animal myPet = new ${type.includes("Cat") ? 'Cat()' : 'Animal()'};\n`;
+                    s += `Console.WriteLine(myPet.Speak());\n\n`;
+                    s += `[Runtime resolution check...]\n`;
+                    s += `Virtual method mapping resolved to Class dynamic type "${type.includes("Cat") ? 'Cat' : 'Animal'}"\n\n`;
+                    s += `[Console Out Results]:\n`;
+                    s += `Output: "${type.includes("Cat") ? 'Meow' : 'Animal sound'}"`;
+                    return s;
+                }
+            }
+        };
+
+        function loadSandboxSnippet() {
+            const s = document.getElementById('sandbox-selector');
+            const data = sandboxSnippets[s.value];
+            const container = document.getElementById('sandbox-inputs');
+
+            container.innerHTML = data.inputs.map(ip => {
+                if (ip.type === 'number') {
+                    return `
+                        <div>
+                            <label class="text-[10px] text-slate-500 dark:text-slate-200 uppercase font-black">${ip.label}</label>
+                            <input type="number" id="${ip.id}" value="${ip.default}" class="w-full mt-1 p-2.5 border rounded bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono outline-none">
                         </div>
                     `;
-                });
-
-                const correctRationale = question.answerOptions.find(o => o.isCorrect).rationale;
-
-                reviewHtml += `
-                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 ${isUserCorrect ? 'border-green-500' : 'border-red-500'}">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                            <span class="text-gray-500 mr-2">${qIndex + 1}.</span> 
-                            <span>${question.question}</span>
-                        </h3>
-                        
-                        <div class="space-y-3 mb-4">
-                            ${optionsHtml}
+                } else {
+                    return `
+                        <div>
+                            <label class="text-[10px] text-slate-500 dark:text-slate-200 uppercase font-black">${ip.label}</label>
+                            <select id="${ip.id}" class="w-full mt-1 p-2.5 border rounded bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono outline-none">
+                                ${ip.options.map(o => `<option value="${o}" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">${o}</option>`).join('')}
+                            </select>
                         </div>
-                        
-                        <div class="bg-blue-50 text-blue-900 p-4 rounded-lg text-sm border border-blue-100">
-                            <strong>Rationale:</strong> <span>${correctRationale}</span>
-                        </div>
-                    </div>
-                `;
-            });
-
-            return `
-                <div class="py-8 px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-4xl mx-auto">
-                        <div class="bg-white rounded-xl shadow-lg p-8 mb-8 text-center">
-                            <h1 class="text-3xl font-bold text-gray-900 mb-4">Quiz Completed!</h1>
-                            <div class="text-6xl font-extrabold text-blue-600 mb-2">
-                                ${score} / ${quizData.length}
-                            </div>
-                            <p class="text-xl text-gray-600 font-medium">
-                                You scored ${percentage}%
-                            </p>
-                            <button onclick="resetQuiz()" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
-                                Retake Quiz
-                            </button>
-                        </div>
-
-                        <div class="space-y-8">
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">Review Your Answers</h2>
-                            ${reviewHtml}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Action Handlers
-        window.handleOptionSelect = function(optionIndex) {
-            selectedAnswers[currentQuestionIndex] = optionIndex;
-            renderView();
-        };
-
-        window.handleNext = function() {
-            if (currentQuestionIndex < quizData.length - 1) {
-                currentQuestionIndex++;
-                showHint = false;
-            } else {
-                showResults = true;
-            }
-            renderView();
-        };
-
-        window.handlePrev = function() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                showHint = false;
-                renderView();
-            }
-        };
-
-        window.toggleHint = function() {
-            showHint = true;
-            renderView();
-        }
-
-        window.calculateScore = function() {
-            let score = 0;
-            quizData.forEach((q, index) => {
-                const selected = selectedAnswers[index];
-                if (selected !== undefined && q.answerOptions[selected].isCorrect) {
-                    score++;
+                    `;
                 }
-            });
-            return score;
-        };
+            }).join('');
+        }
 
-        window.resetQuiz = function() {
-            currentQuestionIndex = 0;
-            selectedAnswers = {};
-            showResults = false;
-            showHint = false;
-            renderView();
-        };
+        function runSandboxCode() {
+            const selector = document.getElementById('sandbox-selector');
+            const data = sandboxSnippets[selector.value];
+            const output = document.getElementById('sandbox-output');
+            
+            output.innerText = "Simulating dynamic C# compiler environment...\n\n";
+            setTimeout(() => {
+                output.innerText = data.simulate();
+            }, 250);
+        }
 
-        // Initial Render
-        document.addEventListener('DOMContentLoaded', () => {
-            renderView();
-        });
+        // State managers
+        function saveProgress() {
+            try {
+                localStorage.setItem('csharp_100_answers', JSON.stringify(savedAnswers));
+                localStorage.setItem('csharp_100_bookmarks', JSON.stringify(bookmarkedQuestions));
+                localStorage.setItem('csharp_100_theory', JSON.stringify(theoryAnswers));
+            } catch (e) {}
+        }
 
+        function loadProgress() {
+            try {
+                const ans = localStorage.getItem('csharp_100_answers');
+                if (ans) savedAnswers = JSON.parse(ans);
+
+                const bookmarks = localStorage.getItem('csharp_100_bookmarks');
+                if (bookmarks) bookmarkedQuestions = JSON.parse(bookmarks);
+
+                const theory = localStorage.getItem('csharp_100_theory');
+                if (theory) theoryAnswers = JSON.parse(theory);
+            } catch (e) {}
+            updateDashboardMetrics();
+        }
+
+        function resetAllProgress() {
+            if (confirm("Resetting all completed multiple choice questions, bookmarks, and written code planning logs. Continue?")) {
+                savedAnswers = {};
+                bookmarkedQuestions = {};
+                theoryAnswers = {};
+                saveProgress();
+                currentQuestionIdx = 0;
+                setQuizMode('mcq');
+                updateDashboardMetrics();
+                renderMatrix();
+            }
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                "'": '&#39;', '"': '&quot;'
+            }[tag] || tag));
+        }
     </script>
 </body>
 </html>
+
+```
